@@ -17,8 +17,27 @@ export default function SettingsTab({ employees, dispos, onRefresh }) {
   const [newForm, setNewForm] = useState({ name:'', initials:'', role:'Équipier', team:'resto', color:'#003f87', contract_hours:39 });
   const [saving, setSaving] = useState(false);
   const [activeTeam, setActiveTeam] = useState('resto');
+  const [dragId, setDragId] = useState(null);
+  const [dragOver, setDragOver] = useState(null);
 
   const teamEmployees = employees.filter(e => e.team === activeTeam).sort((a,b) => a.sort_order - b.sort_order);
+
+  // ── Drag & drop reorder ──────────────────────────────────
+  const handleDrop = async (targetId) => {
+    if (!dragId || dragId === targetId) { setDragId(null); setDragOver(null); return; }
+    const arr = [...teamEmployees];
+    const fromIdx = arr.findIndex(e => e.id === dragId);
+    const toIdx = arr.findIndex(e => e.id === targetId);
+    if (fromIdx < 0 || toIdx < 0) return;
+    const [moved] = arr.splice(fromIdx, 1);
+    arr.splice(toIdx, 0, moved);
+    // Update sort_order in Supabase
+    const updates = arr.map((e, i) => supabase.from('employees').update({ sort_order: i }).eq('id', e.id));
+    await Promise.all(updates);
+    setDragId(null);
+    setDragOver(null);
+    onRefresh();
+  };
 
   // ── Add employee ─────────────────────────────────────────
   const handleAdd = async () => {
@@ -122,11 +141,19 @@ export default function SettingsTab({ employees, dispos, onRefresh }) {
         {teamEmployees.map(emp => {
           const isEditing = editId === emp.id;
           return (
-            <div key={emp.id} style={{
+            <div key={emp.id}
+              draggable={!isEditing}
+              onDragStart={()=>setDragId(emp.id)}
+              onDragOver={(e)=>{e.preventDefault();setDragOver(emp.id);}}
+              onDrop={()=>handleDrop(emp.id)}
+              onDragEnd={()=>{setDragId(null);setDragOver(null);}}
+              style={{
               padding:'10px 12px', marginBottom:8, borderRadius:8,
               background: emp.is_active ? '#edf4f8' : '#e8ecf0',
-              border: isEditing ? '2px solid #ed1548' : '1px solid #c8dce5',
-              opacity: emp.is_active ? 1 : 0.5,
+              border: isEditing ? '2px solid #ed1548' : dragOver===emp.id&&dragId!==emp.id ? '2px solid #003f87' : '1px solid #c8dce5',
+              opacity: dragId===emp.id ? 0.4 : emp.is_active ? 1 : 0.5,
+              cursor: isEditing ? 'default' : 'grab',
+              transition: 'opacity .15s',
             }}>
               {isEditing ? (
                 /* ── Edit mode ── */
@@ -172,6 +199,11 @@ export default function SettingsTab({ employees, dispos, onRefresh }) {
               ) : (
                 /* ── View mode ── */
                 <div style={{display:'flex',alignItems:'center',gap:10}}>
+                  <div style={{display:'flex',flexDirection:'column',gap:2,opacity:.3,flexShrink:0}} title="Glisser pour réordonner">
+                    <div style={{width:10,height:2,background:'#64748b',borderRadius:1}}/>
+                    <div style={{width:10,height:2,background:'#64748b',borderRadius:1}}/>
+                    <div style={{width:10,height:2,background:'#64748b',borderRadius:1}}/>
+                  </div>
                   <div style={{
                     width:32,height:32,borderRadius:8,flexShrink:0,
                     background:emp.color+'20',border:`2px solid ${emp.color}`,
