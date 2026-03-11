@@ -160,9 +160,9 @@ function buildRestauSchedule(weekType, cfg, team) {
     plan[p.id] = {};
     DAYS.forEach(d => { plan[p.id][d] = { shifts:[],off:null }; });
   });
-  const off   = (pid,day,why='Repos') => { plan[pid][day] = { shifts:[],off:why }; };
-  const add   = (pid,day,...shifts) => { if (!plan[pid]?.[day]?.off) shifts.forEach(s => plan[pid][day].shifts.push(s)); };
-  const dispo = (pid,day) => !plan[pid]?.[day]?.off;
+  const off   = (pid,day,why='Repos') => { if (plan[pid]) plan[pid][day] = { shifts:[],off:why }; };
+  const add   = (pid,day,...shifts) => { if (!plan[pid]?.[day] || plan[pid][day].off) return; shifts.forEach(s => plan[pid][day].shifts.push(s)); };
+  const dispo = (pid,day) => plan[pid] ? !plan[pid]?.[day]?.off : false;
 
   TEAM_RESTAU.forEach(p => off(p.id,'Lundi','Fermé'));
   off('justin','Samedi');
@@ -358,9 +358,9 @@ function buildFTSchedule(services, friture, decoupe, ftParams, team) {
     plan[p.id] = {};
     DAYS.forEach(d => { plan[p.id][d] = { shifts:[],off:null }; });
   });
-  const off = (pid,day,why='Indispo') => { plan[pid][day] = { shifts:[],off:why }; };
+  const off = (pid,day,why='Indispo') => { if (plan[pid]) plan[pid][day] = { shifts:[],off:why }; };
   const add = (pid,day,...shifts) => {
-    if (plan[pid]?.[day]?.off) return;
+    if (!plan[pid]?.[day] || plan[pid][day].off) return;
     shifts.forEach(s => plan[pid][day].shifts.push(s));
   };
   // forceAdd: clears off status — used for explicitly assigned FT roles
