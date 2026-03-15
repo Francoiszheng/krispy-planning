@@ -11,16 +11,13 @@ const JOURS = [
   { code: 'Samedi', label: 'Sam' },
   { code: 'Dimanche', label: 'Dim' },
 ];
-
 const TYPES_ETABLISSEMENT = [
   { value: 'restaurant', label: 'Restaurant' },
   { value: 'foodtruck', label: 'Food Truck' },
   { value: 'lab', label: 'Labo de production' },
   { value: 'autre', label: 'Autre' },
 ];
-
 const STATUTS_EMPLOYE = ['Salarié', 'Associé', 'Gérant'];
-
 const B = {
   bleusto: '#b8d5e0', bluck: '#003f87', gochu: '#ed1548', corail: '#f26f63',
   white: '#fff9f3', black: '#000000', bleustoLight: '#ddedf3', bleustoDark: '#9cc5d4',
@@ -30,135 +27,58 @@ const B = {
 const S = {
   page: { fontFamily: "'Montserrat', Arial, sans-serif", color: B.black, minHeight: '100%' },
   subTabs: { display: 'flex', gap: '4px', borderBottom: `2px solid ${B.bluck}`, marginBottom: '24px', overflowX: 'auto' },
-  subTab: (a) => ({
-    padding: '10px 18px', fontSize: '14px', fontWeight: a ? '700' : '500',
-    color: a ? B.white : B.bluck, backgroundColor: a ? B.bluck : 'transparent',
-    border: 'none', borderRadius: '8px 8px 0 0', cursor: 'pointer', whiteSpace: 'nowrap', transition: 'all 0.2s',
-  }),
-  card: {
-    backgroundColor: B.white, borderRadius: '10px', padding: '16px', marginBottom: '12px',
-    border: `1px solid ${B.bleusto}`, boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
-  },
+  subTab: (a) => ({ padding: '10px 18px', fontSize: '14px', fontWeight: a ? '700' : '500', color: a ? B.white : B.bluck, backgroundColor: a ? B.bluck : 'transparent', border: 'none', borderRadius: '8px 8px 0 0', cursor: 'pointer', whiteSpace: 'nowrap', transition: 'all 0.2s' }),
+  card: { backgroundColor: B.white, borderRadius: '10px', padding: '16px', marginBottom: '12px', border: `1px solid ${B.bleusto}`, boxShadow: '0 1px 4px rgba(0,0,0,0.06)' },
   cardHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' },
   cardTitle: { fontSize: '16px', fontWeight: '700', color: B.bluck, margin: 0 },
-  badge: (c = B.bleusto) => ({
-    display: 'inline-block', padding: '2px 10px', borderRadius: '12px', fontSize: '12px', fontWeight: '600',
-    backgroundColor: c, color: (c === B.bleusto || c === B.bleustoLight || c === B.white || c === '#ccc') ? B.bluck : B.white,
-    marginRight: '6px', marginBottom: '4px',
-  }),
-  btnPrimary: {
-    padding: '10px 20px', backgroundColor: B.gochu, color: B.white, border: 'none',
-    borderRadius: '8px', fontSize: '14px', fontWeight: '600', cursor: 'pointer',
-  },
-  btnSecondary: {
-    padding: '8px 16px', backgroundColor: 'transparent', color: B.bluck,
-    border: `1px solid ${B.bluck}`, borderRadius: '8px', fontSize: '13px', fontWeight: '500', cursor: 'pointer',
-  },
-  btnDanger: {
-    padding: '6px 12px', backgroundColor: 'transparent', color: B.gochu,
-    border: `1px solid ${B.gochu}`, borderRadius: '6px', fontSize: '12px', cursor: 'pointer',
-  },
+  badge: (c = B.bleusto) => ({ display: 'inline-block', padding: '2px 10px', borderRadius: '12px', fontSize: '12px', fontWeight: '600', backgroundColor: c, color: (c === B.bleusto || c === B.bleustoLight || c === B.white || c === '#ccc') ? B.bluck : B.white, marginRight: '6px', marginBottom: '4px' }),
+  btnPrimary: { padding: '10px 20px', backgroundColor: B.gochu, color: B.white, border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: '600', cursor: 'pointer' },
+  btnSecondary: { padding: '8px 16px', backgroundColor: 'transparent', color: B.bluck, border: `1px solid ${B.bluck}`, borderRadius: '8px', fontSize: '13px', fontWeight: '500', cursor: 'pointer' },
+  btnDanger: { padding: '6px 12px', backgroundColor: 'transparent', color: B.gochu, border: `1px solid ${B.gochu}`, borderRadius: '6px', fontSize: '12px', cursor: 'pointer' },
   btnSmall: { padding: '4px 10px', fontSize: '12px', borderRadius: '6px', cursor: 'pointer', border: 'none', fontWeight: '500' },
-  input: {
-    width: '100%', padding: '10px 12px', border: `1px solid ${B.bleustoDark}`, borderRadius: '8px',
-    fontSize: '14px', fontFamily: "'Montserrat', Arial, sans-serif", outline: 'none', boxSizing: 'border-box',
-  },
-  select: {
-    width: '100%', padding: '10px 12px', border: `1px solid ${B.bleustoDark}`, borderRadius: '8px',
-    fontSize: '14px', fontFamily: "'Montserrat', Arial, sans-serif", outline: 'none',
-    backgroundColor: B.white, boxSizing: 'border-box',
-  },
+  input: { width: '100%', padding: '10px 12px', border: `1px solid ${B.bleustoDark}`, borderRadius: '8px', fontSize: '14px', fontFamily: "'Montserrat', Arial, sans-serif", outline: 'none', boxSizing: 'border-box' },
+  select: { width: '100%', padding: '10px 12px', border: `1px solid ${B.bleustoDark}`, borderRadius: '8px', fontSize: '14px', fontFamily: "'Montserrat', Arial, sans-serif", outline: 'none', backgroundColor: B.white, boxSizing: 'border-box' },
   label: { display: 'block', fontSize: '13px', fontWeight: '600', color: B.bluck, marginBottom: '4px' },
   field: { marginBottom: '14px' },
   row: { display: 'flex', gap: '12px', flexWrap: 'wrap' },
   emptyState: { textAlign: 'center', padding: '40px 20px', color: B.bleustoDark, fontSize: '14px' },
-  overlay: {
-    position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.4)',
-    display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000,
-  },
-  modal: {
-    backgroundColor: B.white, borderRadius: '14px', padding: '24px', width: '90%',
-    maxWidth: '600px', maxHeight: '85vh', overflowY: 'auto', boxShadow: '0 8px 32px rgba(0,0,0,0.2)',
-  },
+  overlay: { position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 },
+  modal: { backgroundColor: B.white, borderRadius: '14px', padding: '24px', width: '90%', maxWidth: '600px', maxHeight: '85vh', overflowY: 'auto', boxShadow: '0 8px 32px rgba(0,0,0,0.2)' },
   modalTitle: { fontSize: '18px', fontWeight: '700', color: B.bluck, marginBottom: '20px', fontFamily: "'Helvetica Neue', Arial, sans-serif" },
   topBar: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' },
   chipRow: { display: 'flex', flexWrap: 'wrap', gap: '6px' },
-  chip: (s) => ({
-    padding: '6px 14px', borderRadius: '20px', fontSize: '13px', fontWeight: '600',
-    border: `2px solid ${s ? B.bluck : B.bleustoDark}`, backgroundColor: s ? B.bleusto : 'transparent',
-    color: B.bluck, cursor: 'pointer', transition: 'all 0.15s',
-  }),
+  chip: (s) => ({ padding: '6px 14px', borderRadius: '20px', fontSize: '13px', fontWeight: '600', border: `2px solid ${s ? B.bluck : B.bleustoDark}`, backgroundColor: s ? B.bleusto : 'transparent', color: B.bluck, cursor: 'pointer', transition: 'all 0.15s' }),
   infoText: { fontSize: '12px', color: '#888', marginTop: '4px' },
-  tag: {
-    display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '3px 10px',
-    borderRadius: '14px', fontSize: '12px', fontWeight: '600',
-    backgroundColor: B.bleustoLight, color: B.bluck, marginRight: '4px', marginBottom: '4px',
-  },
-  divider: { borderTop: `2px solid ${B.bleusto}`, margin: '32px 0 24px' },
-  sectionHeader: {
-    fontSize: '16px', fontWeight: '700', color: B.bluck, marginBottom: '12px',
-    fontFamily: "'Helvetica Neue', Arial, sans-serif",
-  },
+  tag: { display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '3px 10px', borderRadius: '14px', fontSize: '12px', fontWeight: '600', backgroundColor: B.bleustoLight, color: B.bluck, marginRight: '4px', marginBottom: '4px' },
   checkbox: { display: 'flex', alignItems: 'center', gap: '10px', padding: '8px 12px', borderRadius: '8px', cursor: 'pointer', transition: 'all 0.15s' },
 };
 
 // ─── UTILS ───────────────────────────────────────────────────
-
 function Modal({ title, onClose, children }) {
-  return (
-    <div style={S.overlay} onClick={onClose}>
-      <div style={S.modal} onClick={(e) => e.stopPropagation()}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-          <h3 style={S.modalTitle}>{title}</h3>
-          <button onClick={onClose} style={{ ...S.btnSmall, color: B.bluck, backgroundColor: B.bleustoLight }}>✕</button>
-        </div>
-        {children}
-      </div>
-    </div>
-  );
+  return (<div style={S.overlay} onClick={onClose}><div style={S.modal} onClick={(e) => e.stopPropagation()}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+      <h3 style={S.modalTitle}>{title}</h3>
+      <button onClick={onClose} style={{ ...S.btnSmall, color: B.bluck, backgroundColor: B.bleustoLight }}>✕</button>
+    </div>{children}
+  </div></div>);
 }
-
 function JoursPicker({ value = [], onChange }) {
   const toggle = (c) => onChange(value.includes(c) ? value.filter((j) => j !== c) : [...value, c]);
-  return (
-    <div style={S.chipRow}>
-      {JOURS.map((j) => (
-        <button key={j.code} type="button" style={S.chip(value.includes(j.code))} onClick={() => toggle(j.code)}>{j.label}</button>
-      ))}
-    </div>
-  );
+  return (<div style={S.chipRow}>{JOURS.map((j) => <button key={j.code} type="button" style={S.chip(value.includes(j.code))} onClick={() => toggle(j.code)}>{j.label}</button>)}</div>);
 }
-
-function CapacitesPicker({ allCapacites, selected = [], onChange }) {
-  const toggle = (id) => onChange(selected.includes(id) ? selected.filter((c) => c !== id) : [...selected, id]);
-  if (!allCapacites.length) return <p style={S.infoText}>Aucune capacité créée</p>;
-  return (
-    <div style={S.chipRow}>
-      {allCapacites.map((c) => (
-        <button key={c.id} type="button" style={S.chip(selected.includes(c.id))} onClick={() => toggle(c.id)}>
-          {c.icone} {c.nom}
-        </button>
-      ))}
-    </div>
-  );
-}
-
 function ConfirmDelete({ message, onConfirm, onCancel }) {
-  return (
-    <Modal title="Confirmer la suppression" onClose={onCancel}>
-      <p style={{ marginBottom: '20px', fontSize: '14px' }}>{message}</p>
-      <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
-        <button style={S.btnSecondary} onClick={onCancel}>Annuler</button>
-        <button style={{ ...S.btnPrimary, backgroundColor: B.gochu }} onClick={onConfirm}>Supprimer</button>
-      </div>
-    </Modal>
-  );
+  return (<Modal title="Confirmer la suppression" onClose={onCancel}>
+    <p style={{ marginBottom: '20px', fontSize: '14px' }}>{message}</p>
+    <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
+      <button style={S.btnSecondary} onClick={onCancel}>Annuler</button>
+      <button style={{ ...S.btnPrimary, backgroundColor: B.gochu }} onClick={onConfirm}>Supprimer</button>
+    </div>
+  </Modal>);
 }
 
 // ═══════════════════════════════════════════════════════════════
 // TAB 1 : ÉTABLISSEMENTS & SERVICES
 // ═══════════════════════════════════════════════════════════════
-
 function TabEtablissements() {
   const [etablissements, setEtablissements] = useState([]);
   const [services, setServices] = useState([]);
@@ -184,7 +104,6 @@ function TabEtablissements() {
     setCapacites(capRes.data || []);
     setLoading(false);
   }, []);
-
   useEffect(() => { fetch_(); }, [fetch_]);
 
   const saveEtab = async (form) => {
@@ -194,7 +113,6 @@ function TabEtablissements() {
     setEditingEtab(null); fetch_();
   };
   const removeEtab = async () => { if (deletingEtab) { await supabase.from('etablissements').delete().eq('id', deletingEtab.id); setDeletingEtab(null); fetch_(); } };
-
   const saveService = async (form) => {
     const p = { etablissement_id: form.etablissement_id, nom: form.nom, jours: form.jours, heure_debut: form.heure_debut, heure_fin: form.heure_fin, effectif_min: form.effectif_min, capacites_requises: form.capacites_requises || [], notes: form.notes, updated_at: new Date().toISOString() };
     if (form.id) await supabase.from('services').update(p).eq('id', form.id);
@@ -202,37 +120,31 @@ function TabEtablissements() {
     setEditingService(null); fetch_();
   };
   const removeService = async () => { if (deletingService) { await supabase.from('services').delete().eq('id', deletingService.id); setDeletingService(null); fetch_(); } };
-
   const saveSlot = async (form) => {
     const p = { service_id: form.service_id, nom: form.nom, nb_personnes: form.nb_personnes, heure_debut: form.heure_debut, heure_fin: form.heure_fin, capacites_requises: form.capacites_requises || [], est_optionnel: form.est_optionnel, notes: form.notes };
-    if (form.id) await supabase.from('slots').update(p).eq('id', form.id);
-    else { const cnt = services.find((s) => s.id === form.service_id)?.slots?.length || 0; await supabase.from('slots').insert({ ...p, sort_order: cnt }); }
+    if (form.id) await supabase.from('slots').update(p).eq('id', form.id); else { const c = services.find((s) => s.id === form.service_id)?.slots?.length || 0; await supabase.from('slots').insert({ ...p, sort_order: c }); }
     setEditingSlot(null); fetch_();
   };
   const removeSlot = async () => { if (deletingSlot) { await supabase.from('slots').delete().eq('id', deletingSlot.id); setDeletingSlot(null); fetch_(); } };
 
-  if (loading) return <p style={S.emptyState}>Chargement…</p>;
+  const CapBadges = ({ ids }) => { if (!ids?.length) return null; return ids.map((cid) => { const cap = capacites.find((c) => c.id === cid); return cap ? <span key={cid} style={S.tag}>{cap.icone} {cap.nom}</span> : null; }); };
 
+  if (loading) return <p style={S.emptyState}>Chargement…</p>;
   return (
     <div>
       <div style={S.topBar}>
         <p style={{ margin: 0, fontSize: '13px', color: '#666' }}>{etablissements.length} établissement{etablissements.length > 1 ? 's' : ''}</p>
         <button style={S.btnPrimary} onClick={() => setEditingEtab('new')}>+ Établissement</button>
       </div>
-
       {!etablissements.length && <p style={S.emptyState}>Aucun établissement configuré. Commencez par en créer un, puis ajoutez-y des services.</p>}
-
       {etablissements.map((et) => {
-        const isExp = expandedEtab === et.id;
-        const etSrv = services.filter((s) => s.etablissement_id === et.id);
+        const isExp = expandedEtab === et.id; const etSrv = services.filter((s) => s.etablissement_id === et.id);
         return (
           <div key={et.id} style={{ ...S.card, borderLeft: `4px solid ${B.bluck}`, padding: 0 }}>
             <div style={{ padding: '16px', cursor: 'pointer' }} onClick={() => setExpandedEtab(isExp ? null : et.id)}>
               <div style={S.cardHeader}>
                 <div>
-                  <h4 style={{ ...S.cardTitle, display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <span style={{ fontSize: '12px' }}>{isExp ? '▼' : '▶'}</span> {et.nom}
-                  </h4>
+                  <h4 style={{ ...S.cardTitle, display: 'flex', alignItems: 'center', gap: '8px' }}><span style={{ fontSize: '12px' }}>{isExp ? '▼' : '▶'}</span> {et.nom}</h4>
                   <div style={{ marginTop: '4px' }}>
                     <span style={S.badge()}>{TYPES_ETABLISSEMENT.find((t) => t.value === et.type)?.label || et.type}</span>
                     {et.alternance_ab && <span style={S.badge(B.corail)}>A/B</span>}
@@ -250,14 +162,13 @@ function TabEtablissements() {
                 </div>
               )}
             </div>
-
             {isExp && (
               <div style={{ padding: '0 16px 16px', borderTop: `1px solid ${B.bleusto}` }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '14px 0 10px' }}>
                   <span style={{ fontSize: '14px', fontWeight: '700', color: B.bluck }}>Services</span>
                   <button style={{ ...S.btnSmall, backgroundColor: B.bleusto, color: B.bluck, padding: '6px 14px' }} onClick={() => setEditingService({ _etabId: et.id })}>+ Service</button>
                 </div>
-                {!etSrv.length && <p style={{ fontSize: '13px', color: '#999', fontStyle: 'italic' }}>Aucun service. Ajoutez un service (midi, soir, FT…).</p>}
+                {!etSrv.length && <p style={{ fontSize: '13px', color: '#999', fontStyle: 'italic' }}>Aucun service.</p>}
                 {etSrv.map((srv) => {
                   const isSE = expandedService === srv.id;
                   return (
@@ -275,9 +186,7 @@ function TabEtablissements() {
                           <button style={{ ...S.btnSmall, color: B.gochu, backgroundColor: '#fee' }} onClick={() => setDeletingService(srv)}>✕</button>
                         </div>
                       </div>
-                      {(srv.capacites_requises || []).length > 0 && (
-                        <div style={{ marginTop: '6px' }}>{srv.capacites_requises.map((cid) => { const cap = capacites.find((c) => c.id === cid); return cap ? <span key={cid} style={S.tag}>{cap.icone} {cap.nom}</span> : null; })}</div>
-                      )}
+                      {(srv.capacites_requises || []).length > 0 && <div style={{ marginTop: '6px' }}><CapBadges ids={srv.capacites_requises} /></div>}
                       {isSE && (
                         <div style={{ marginTop: '10px', paddingTop: '10px', borderTop: `1px dashed ${B.bleustoDark}` }}>
                           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
@@ -291,7 +200,7 @@ function TabEtablissements() {
                                 <span style={{ fontWeight: '600', fontSize: '12px' }}>{slot.nom}</span>
                                 <span style={{ fontSize: '11px', color: '#666', marginLeft: '6px' }}>{slot.heure_debut}→{slot.heure_fin} · {slot.nb_personnes} pers.</span>
                                 {slot.est_optionnel && <span style={{ ...S.badge(B.corail), fontSize: '10px', marginLeft: '4px' }}>opt.</span>}
-                                {(slot.capacites_requises || []).map((cid) => { const cap = capacites.find((c) => c.id === cid); return cap ? <span key={cid} style={{ ...S.tag, fontSize: '10px', padding: '1px 6px' }}>{cap.icone} {cap.nom}</span> : null; })}
+                                <CapBadges ids={slot.capacites_requises} />
                               </div>
                               <div style={{ display: 'flex', gap: '3px' }}>
                                 <button style={{ ...S.btnSmall, color: B.bluck, backgroundColor: B.bleustoLight, fontSize: '11px' }} onClick={() => setEditingSlot({ serviceId: srv.id, slot })}>✎</button>
@@ -309,7 +218,6 @@ function TabEtablissements() {
           </div>
         );
       })}
-
       {editingEtab && <EtablissementForm initial={editingEtab === 'new' ? null : editingEtab} onSave={saveEtab} onClose={() => setEditingEtab(null)} />}
       {editingService && <ServiceForm initial={editingService._etabId ? null : editingService} defaultEtabId={editingService._etabId || editingService.etablissement_id} etablissements={etablissements} capacites={capacites} onSave={saveService} onClose={() => setEditingService(null)} />}
       {editingSlot && <SlotForm initial={editingSlot.slot} serviceId={editingSlot.serviceId} capacites={capacites} onSave={saveSlot} onClose={() => setEditingSlot(null)} />}
@@ -320,197 +228,127 @@ function TabEtablissements() {
   );
 }
 
-// ── Forms Établissement / Service / Slot ──
-
+// ── Forms ──
 function EtablissementForm({ initial, onSave, onClose }) {
-  const [form, setForm] = useState({
-    id: initial?.id || null, nom: initial?.nom || '', type: initial?.type || 'restaurant',
-    horaires_ouverture: initial?.horaires_ouverture || {}, alternance_ab: initial?.alternance_ab || false, notes: initial?.notes || '',
-  });
+  const [form, setForm] = useState({ id: initial?.id || null, nom: initial?.nom || '', type: initial?.type || 'restaurant', horaires_ouverture: initial?.horaires_ouverture || {}, alternance_ab: initial?.alternance_ab || false, notes: initial?.notes || '' });
   const toggleJour = (j) => { const h = { ...form.horaires_ouverture }; if (h[j]) delete h[j]; else h[j] = [{ debut: '12:00', fin: '14:15' }, { debut: '19:00', fin: '22:00' }]; setForm({ ...form, horaires_ouverture: h }); };
   const updatePlage = (j, i, f, v) => { const h = { ...form.horaires_ouverture }; const p = [...(h[j] || [])]; p[i] = { ...p[i], [f]: v }; h[j] = p; setForm({ ...form, horaires_ouverture: h }); };
   const addPlage = (j) => { const h = { ...form.horaires_ouverture }; h[j] = [...(h[j] || []), { debut: '19:00', fin: '22:00' }]; setForm({ ...form, horaires_ouverture: h }); };
   const removePlage = (j, i) => { const h = { ...form.horaires_ouverture }; const p = [...(h[j] || [])]; p.splice(i, 1); if (!p.length) delete h[j]; else h[j] = p; setForm({ ...form, horaires_ouverture: h }); };
-
   return (
     <Modal title={initial ? "Modifier l'établissement" : 'Nouvel établissement'} onClose={onClose}>
       <div style={S.field}><label style={S.label}>Nom</label><input style={S.input} value={form.nom} onChange={(e) => setForm({ ...form, nom: e.target.value })} placeholder="Ex: Restaurant Biot" /></div>
-      <div style={S.field}><label style={S.label}>Type</label>
-        <select style={S.select} value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })}>{TYPES_ETABLISSEMENT.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}</select>
-      </div>
-      <div style={S.field}>
-        <label style={S.label}>Horaires d'ouverture</label>
-        <p style={S.infoText}>Cliquez sur un jour pour l'activer, puis ajoutez des plages (midi, soir…)</p>
+      <div style={S.field}><label style={S.label}>Type</label><select style={S.select} value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })}>{TYPES_ETABLISSEMENT.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}</select></div>
+      <div style={S.field}><label style={S.label}>Horaires d'ouverture</label><p style={S.infoText}>Activez un jour, puis ajoutez des plages (midi, soir…)</p>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '8px' }}>
           {JOURS.map((j) => { const plages = form.horaires_ouverture[j.code]; const isO = !!plages; return (
             <div key={j.code} style={{ padding: '8px', borderRadius: '8px', backgroundColor: isO ? B.bleustoLight : 'transparent', border: `1px solid ${isO ? B.bleusto : '#eee'}` }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <button type="button" style={{ ...S.chip(isO), minWidth: '48px' }} onClick={() => toggleJour(j.code)}>{j.label}</button>
-                {!isO && <span style={{ fontSize: '12px', color: '#bbb' }}>Fermé</span>}
-              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><button type="button" style={{ ...S.chip(isO), minWidth: '48px' }} onClick={() => toggleJour(j.code)}>{j.label}</button>{!isO && <span style={{ fontSize: '12px', color: '#bbb' }}>Fermé</span>}</div>
               {isO && (<div style={{ marginTop: '6px', paddingLeft: '4px' }}>
-                {plages.map((p, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
-                    <span style={{ fontSize: '11px', color: '#888', width: '56px' }}>Plage {i + 1}</span>
-                    <input type="time" style={{ ...S.input, width: '110px', padding: '5px 8px', fontSize: '13px' }} value={p.debut} onChange={(e) => updatePlage(j.code, i, 'debut', e.target.value)} />
-                    <span style={{ color: '#999', fontSize: '13px' }}>→</span>
-                    <input type="time" style={{ ...S.input, width: '110px', padding: '5px 8px', fontSize: '13px' }} value={p.fin} onChange={(e) => updatePlage(j.code, i, 'fin', e.target.value)} />
-                    {plages.length > 1 && <button type="button" style={{ ...S.btnSmall, color: B.gochu, backgroundColor: '#fee' }} onClick={() => removePlage(j.code, i)}>✕</button>}
-                  </div>
-                ))}
+                {plages.map((p, i) => (<div key={i} style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
+                  <span style={{ fontSize: '11px', color: '#888', width: '56px' }}>Plage {i + 1}</span>
+                  <input type="time" style={{ ...S.input, width: '110px', padding: '5px 8px', fontSize: '13px' }} value={p.debut} onChange={(e) => updatePlage(j.code, i, 'debut', e.target.value)} />
+                  <span style={{ color: '#999', fontSize: '13px' }}>→</span>
+                  <input type="time" style={{ ...S.input, width: '110px', padding: '5px 8px', fontSize: '13px' }} value={p.fin} onChange={(e) => updatePlage(j.code, i, 'fin', e.target.value)} />
+                  {plages.length > 1 && <button type="button" style={{ ...S.btnSmall, color: B.gochu, backgroundColor: '#fee' }} onClick={() => removePlage(j.code, i)}>✕</button>}
+                </div>))}
                 <button type="button" style={{ ...S.btnSmall, color: B.bluck, backgroundColor: B.white, border: `1px dashed ${B.bleustoDark}`, marginTop: '2px' }} onClick={() => addPlage(j.code)}>+ plage</button>
               </div>)}
-            </div>
-          ); })}
+            </div>); })}
         </div>
       </div>
-      <div style={S.field}><label style={{ ...S.label, display: 'flex', alignItems: 'center', gap: '8px' }}><input type="checkbox" checked={form.alternance_ab} onChange={(e) => setForm({ ...form, alternance_ab: e.target.checked })} /> Alternance Semaine A / Semaine B</label></div>
+      <div style={S.field}><label style={{ ...S.label, display: 'flex', alignItems: 'center', gap: '8px' }}><input type="checkbox" checked={form.alternance_ab} onChange={(e) => setForm({ ...form, alternance_ab: e.target.checked })} /> Alternance Semaine A / B</label></div>
       <div style={S.field}><label style={S.label}>Notes</label><textarea style={{ ...S.input, minHeight: '50px', resize: 'vertical' }} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} /></div>
-      <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '16px' }}>
-        <button style={S.btnSecondary} onClick={onClose}>Annuler</button>
-        <button style={S.btnPrimary} disabled={!form.nom.trim()} onClick={() => onSave(form)}>{initial ? 'Enregistrer' : 'Créer'}</button>
-      </div>
+      <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '16px' }}><button style={S.btnSecondary} onClick={onClose}>Annuler</button><button style={S.btnPrimary} disabled={!form.nom.trim()} onClick={() => onSave(form)}>{initial ? 'Enregistrer' : 'Créer'}</button></div>
     </Modal>
   );
 }
 
+function CapacitesPicker({ allCapacites, selected = [], onChange }) {
+  const toggle = (id) => onChange(selected.includes(id) ? selected.filter((c) => c !== id) : [...selected, id]);
+  if (!allCapacites.length) return <p style={S.infoText}>Aucune capacité</p>;
+  return (<div style={S.chipRow}>{allCapacites.map((c) => <button key={c.id} type="button" style={S.chip(selected.includes(c.id))} onClick={() => toggle(c.id)}>{c.icone} {c.nom}</button>)}</div>);
+}
+
 function ServiceForm({ initial, defaultEtabId, etablissements, capacites, onSave, onClose }) {
-  const [form, setForm] = useState({
-    id: initial?.id || null, etablissement_id: initial?.etablissement_id || defaultEtabId || etablissements[0]?.id || '',
-    nom: initial?.nom || '', jours: initial?.jours || ['Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'],
-    heure_debut: initial?.heure_debut || '09:00', heure_fin: initial?.heure_fin || '14:30',
-    effectif_min: initial?.effectif_min || 2, capacites_requises: initial?.capacites_requises || [], notes: initial?.notes || '',
-  });
+  const [form, setForm] = useState({ id: initial?.id || null, etablissement_id: initial?.etablissement_id || defaultEtabId || etablissements[0]?.id || '', nom: initial?.nom || '', jours: initial?.jours || ['Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'], heure_debut: initial?.heure_debut || '09:00', heure_fin: initial?.heure_fin || '14:30', effectif_min: initial?.effectif_min || 2, capacites_requises: initial?.capacites_requises || [], notes: initial?.notes || '' });
   return (
     <Modal title={initial ? 'Modifier le service' : 'Nouveau service'} onClose={onClose}>
       {etablissements.length > 1 && <div style={S.field}><label style={S.label}>Établissement</label><select style={S.select} value={form.etablissement_id} onChange={(e) => setForm({ ...form, etablissement_id: e.target.value })}>{etablissements.map((et) => <option key={et.id} value={et.id}>{et.nom}</option>)}</select></div>}
       <div style={S.field}><label style={S.label}>Nom du service</label><input style={S.input} value={form.nom} onChange={(e) => setForm({ ...form, nom: e.target.value })} placeholder="Ex: Midi, Soir, FT Défense…" /></div>
       <div style={S.field}><label style={S.label}>Jours</label><JoursPicker value={form.jours} onChange={(jours) => setForm({ ...form, jours })} /></div>
       <div style={S.row}>
-        <div style={{ ...S.field, flex: 1 }}><label style={S.label}>Heure début</label><input type="time" style={S.input} value={form.heure_debut} onChange={(e) => setForm({ ...form, heure_debut: e.target.value })} /></div>
-        <div style={{ ...S.field, flex: 1 }}><label style={S.label}>Heure fin</label><input type="time" style={S.input} value={form.heure_fin} onChange={(e) => setForm({ ...form, heure_fin: e.target.value })} /></div>
+        <div style={{ ...S.field, flex: 1 }}><label style={S.label}>Début</label><input type="time" style={S.input} value={form.heure_debut} onChange={(e) => setForm({ ...form, heure_debut: e.target.value })} /></div>
+        <div style={{ ...S.field, flex: 1 }}><label style={S.label}>Fin</label><input type="time" style={S.input} value={form.heure_fin} onChange={(e) => setForm({ ...form, heure_fin: e.target.value })} /></div>
         <div style={{ ...S.field, flex: 1 }}><label style={S.label}>Effectif min</label><input type="number" min={1} style={S.input} value={form.effectif_min} onChange={(e) => setForm({ ...form, effectif_min: parseInt(e.target.value) || 1 })} /></div>
       </div>
       <div style={S.field}><label style={S.label}>Capacités requises</label><p style={S.infoText}>Au moins 1 personne avec cette capacité doit être présente</p><CapacitesPicker allCapacites={capacites} selected={form.capacites_requises} onChange={(c) => setForm({ ...form, capacites_requises: c })} /></div>
       <div style={S.field}><label style={S.label}>Notes</label><textarea style={{ ...S.input, minHeight: '50px', resize: 'vertical' }} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} /></div>
-      <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '16px' }}>
-        <button style={S.btnSecondary} onClick={onClose}>Annuler</button>
-        <button style={S.btnPrimary} disabled={!form.nom.trim() || !form.etablissement_id} onClick={() => onSave(form)}>{initial ? 'Enregistrer' : 'Créer'}</button>
-      </div>
+      <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '16px' }}><button style={S.btnSecondary} onClick={onClose}>Annuler</button><button style={S.btnPrimary} disabled={!form.nom.trim()} onClick={() => onSave(form)}>{initial ? 'Enregistrer' : 'Créer'}</button></div>
     </Modal>
   );
 }
 
 function SlotForm({ initial, serviceId, capacites, onSave, onClose }) {
-  const [form, setForm] = useState({
-    id: initial?.id || null, service_id: serviceId, nom: initial?.nom || '',
-    nb_personnes: initial?.nb_personnes || 1, heure_debut: initial?.heure_debut || '09:00', heure_fin: initial?.heure_fin || '14:30',
-    capacites_requises: initial?.capacites_requises || [], est_optionnel: initial?.est_optionnel || false, notes: initial?.notes || '',
-  });
+  const [form, setForm] = useState({ id: initial?.id || null, service_id: serviceId, nom: initial?.nom || '', nb_personnes: initial?.nb_personnes || 1, heure_debut: initial?.heure_debut || '09:00', heure_fin: initial?.heure_fin || '14:30', capacites_requises: initial?.capacites_requises || [], est_optionnel: initial?.est_optionnel || false, notes: initial?.notes || '' });
   return (
     <Modal title={initial ? 'Modifier le slot' : 'Nouveau slot'} onClose={onClose}>
-      <div style={S.field}><label style={S.label}>Nom du slot</label><input style={S.input} value={form.nom} onChange={(e) => setForm({ ...form, nom: e.target.value })} placeholder="Ex: Mise en place, Journée complète…" /></div>
+      <div style={S.field}><label style={S.label}>Nom</label><input style={S.input} value={form.nom} onChange={(e) => setForm({ ...form, nom: e.target.value })} placeholder="Ex: Mise en place, Journée complète…" /></div>
       <div style={S.row}>
-        <div style={{ ...S.field, flex: 1 }}><label style={S.label}>Nb pers.</label><input type="number" min={1} style={S.input} value={form.nb_personnes} onChange={(e) => setForm({ ...form, nb_personnes: parseInt(e.target.value) || 1 })} /></div>
+        <div style={{ ...S.field, flex: 1 }}><label style={S.label}>Pers.</label><input type="number" min={1} style={S.input} value={form.nb_personnes} onChange={(e) => setForm({ ...form, nb_personnes: parseInt(e.target.value) || 1 })} /></div>
         <div style={{ ...S.field, flex: 1 }}><label style={S.label}>Début</label><input type="time" style={S.input} value={form.heure_debut} onChange={(e) => setForm({ ...form, heure_debut: e.target.value })} /></div>
         <div style={{ ...S.field, flex: 1 }}><label style={S.label}>Fin</label><input type="time" style={S.input} value={form.heure_fin} onChange={(e) => setForm({ ...form, heure_fin: e.target.value })} /></div>
       </div>
       <div style={S.field}><label style={S.label}>Capacités requises</label><CapacitesPicker allCapacites={capacites} selected={form.capacites_requises} onChange={(c) => setForm({ ...form, capacites_requises: c })} /></div>
-      <div style={S.field}><label style={{ ...S.label, display: 'flex', alignItems: 'center', gap: '8px' }}><input type="checkbox" checked={form.est_optionnel} onChange={(e) => setForm({ ...form, est_optionnel: e.target.checked })} /> Slot optionnel</label></div>
+      <div style={S.field}><label style={{ ...S.label, display: 'flex', alignItems: 'center', gap: '8px' }}><input type="checkbox" checked={form.est_optionnel} onChange={(e) => setForm({ ...form, est_optionnel: e.target.checked })} /> Optionnel</label></div>
       <div style={S.field}><label style={S.label}>Notes</label><textarea style={{ ...S.input, minHeight: '50px', resize: 'vertical' }} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} /></div>
-      <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '16px' }}>
-        <button style={S.btnSecondary} onClick={onClose}>Annuler</button>
-        <button style={S.btnPrimary} disabled={!form.nom.trim()} onClick={() => onSave(form)}>{initial ? 'Enregistrer' : 'Créer'}</button>
-      </div>
+      <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '16px' }}><button style={S.btnSecondary} onClick={onClose}>Annuler</button><button style={S.btnPrimary} disabled={!form.nom.trim()} onClick={() => onSave(form)}>{initial ? 'Enregistrer' : 'Créer'}</button></div>
     </Modal>
   );
 }
 
 // ═══════════════════════════════════════════════════════════════
-// TAB 2 : CAPACITÉS & PROFILS
+// TAB 2 : PROFILS
 // ═══════════════════════════════════════════════════════════════
-
-function TabCapacitesProfils() {
-  const [capacites, setCapacites] = useState([]);
+function TabProfils() {
   const [profils, setProfils] = useState([]);
+  const [capacites, setCapacites] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [editingCap, setEditingCap] = useState(null);
-  const [deletingCap, setDeletingCap] = useState(null);
-  const [editingProfil, setEditingProfil] = useState(null);
-  const [deletingProfil, setDeletingProfil] = useState(null);
+  const [editing, setEditing] = useState(null);
+  const [deleting, setDeleting] = useState(null);
 
   const fetch_ = useCallback(async () => {
-    const [capRes, profRes] = await Promise.all([
-      supabase.from('capacites').select('*').order('sort_order'),
+    const [profRes, capRes] = await Promise.all([
       supabase.from('profils').select('*').order('sort_order'),
+      supabase.from('capacites').select('*').order('sort_order'),
     ]);
-    setCapacites(capRes.data || []);
     setProfils(profRes.data || []);
+    setCapacites(capRes.data || []);
     setLoading(false);
   }, []);
-
   useEffect(() => { fetch_(); }, [fetch_]);
 
-  // Capacités CRUD
-  const saveCap = async (form) => {
-    const p = { nom: form.nom, description: form.description, icone: form.icone, types_etablissement: form.types_etablissement?.length ? form.types_etablissement : null };
-    if (form.id) await supabase.from('capacites').update(p).eq('id', form.id);
-    else await supabase.from('capacites').insert({ ...p, sort_order: capacites.length });
-    setEditingCap(null); fetch_();
-  };
-  const removeCap = async () => { if (deletingCap) { await supabase.from('capacites').delete().eq('id', deletingCap.id); setDeletingCap(null); fetch_(); } };
-
-  // Profils CRUD
-  const saveProfil = async (form) => {
+  const save = async (form) => {
     const p = { nom: form.nom, description: form.description, capacite_ids: form.capacite_ids || [] };
     if (form.id) await supabase.from('profils').update({ ...p, updated_at: new Date().toISOString() }).eq('id', form.id);
     else await supabase.from('profils').insert({ ...p, sort_order: profils.length });
-    setEditingProfil(null); fetch_();
+    setEditing(null); fetch_();
   };
-  const removeProfil = async () => { if (deletingProfil) { await supabase.from('profils').delete().eq('id', deletingProfil.id); setDeletingProfil(null); fetch_(); } };
+  const remove = async () => { if (deleting) { await supabase.from('profils').delete().eq('id', deleting.id); setDeleting(null); fetch_(); } };
 
   if (loading) return <p style={S.emptyState}>Chargement…</p>;
 
   return (
     <div>
-      {/* ── Section Capacités ── */}
       <div style={S.topBar}>
-        <h3 style={S.sectionHeader}>🏷️ Capacités</h3>
-        <button style={S.btnPrimary} onClick={() => setEditingCap('new')}>+ Capacité</button>
+        <p style={{ margin: 0, fontSize: '13px', color: '#666' }}>{profils.length} profil{profils.length > 1 ? 's' : ''}</p>
+        <button style={S.btnPrimary} onClick={() => setEditing('new')}>+ Nouveau profil</button>
       </div>
-      <p style={{ ...S.infoText, marginTop: '-12px', marginBottom: '14px' }}>
-        Les compétences de base assignables à chaque profil d'employé.
+      <p style={{ ...S.infoText, marginTop: '-12px', marginBottom: '16px' }}>
+        Créez vos profils d'employés et cochez les capacités de chacun. Exemples : Manager, Assistant Manager, Équipier polyvalent, Chauffeur FT…
       </p>
 
-      {!capacites.length && <p style={S.emptyState}>Aucune capacité. Exécutez le schéma SQL pour charger les capacités standard.</p>}
-
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '8px' }}>
-        {capacites.map((cap) => (
-          <div key={cap.id} style={{ ...S.card, flex: '1 1 220px', maxWidth: '300px', padding: '12px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontWeight: '700', fontSize: '14px', color: B.bluck }}>{cap.icone} {cap.nom}</span>
-              <div style={{ display: 'flex', gap: '4px' }}>
-                <button style={{ ...S.btnSmall, color: B.bluck, backgroundColor: B.bleustoLight }} onClick={() => setEditingCap(cap)}>✎</button>
-                {!cap.is_standard && <button style={{ ...S.btnSmall, color: B.gochu, backgroundColor: '#fee' }} onClick={() => setDeletingCap(cap)}>✕</button>}
-              </div>
-            </div>
-            {cap.description && <p style={{ fontSize: '11px', color: '#666', margin: '4px 0 0' }}>{cap.description}</p>}
-            {cap.is_standard && <span style={{ ...S.badge(B.bleusto), marginTop: '6px', fontSize: '10px' }}>Standard</span>}
-          </div>
-        ))}
-      </div>
-
-      {/* ── Section Profils ── */}
-      <div style={S.divider} />
-      <div style={S.topBar}>
-        <h3 style={S.sectionHeader}>👤 Profils (typologies d'employés)</h3>
-        <button style={S.btnPrimary} onClick={() => setEditingProfil('new')}>+ Profil</button>
-      </div>
-      <p style={{ ...S.infoText, marginTop: '-12px', marginBottom: '14px' }}>
-        Chaque profil regroupe des capacités. Quand vous assignez un profil à un employé, ses capacités sont pré-remplies.
-      </p>
-
-      {!profils.length && <p style={S.emptyState}>Aucun profil. Exécutez le schéma SQL pour charger les templates.</p>}
+      {!profils.length && <p style={S.emptyState}>Aucun profil créé. Commencez par créer vos typologies d'employés.</p>}
 
       {profils.map((prof) => {
         const caps = capacites.filter((c) => (prof.capacite_ids || []).includes(c.id));
@@ -518,78 +356,42 @@ function TabCapacitesProfils() {
           <div key={prof.id} style={{ ...S.card, borderLeft: `4px solid ${B.corail}` }}>
             <div style={S.cardHeader}>
               <div>
-                <h4 style={{ ...S.cardTitle, fontSize: '15px' }}>
-                  {prof.nom}
-                  {prof.is_template && <span style={{ ...S.badge(B.bleusto), marginLeft: '8px', fontSize: '10px' }}>Template</span>}
-                </h4>
+                <h4 style={{ ...S.cardTitle, fontSize: '15px' }}>{prof.nom}</h4>
                 {prof.description && <p style={{ fontSize: '12px', color: '#666', margin: '2px 0 0' }}>{prof.description}</p>}
               </div>
               <div style={{ display: 'flex', gap: '4px' }}>
-                <button style={S.btnSecondary} onClick={() => setEditingProfil(prof)}>Modifier</button>
-                {!prof.is_template && <button style={S.btnDanger} onClick={() => setDeletingProfil(prof)}>Suppr.</button>}
+                <button style={S.btnSecondary} onClick={() => setEditing(prof)}>Modifier</button>
+                <button style={S.btnDanger} onClick={() => setDeleting(prof)}>Suppr.</button>
               </div>
             </div>
             <div style={{ marginTop: '6px' }}>
               {caps.length ? caps.map((c) => <span key={c.id} style={S.tag}>{c.icone} {c.nom}</span>)
-                : <span style={{ fontSize: '12px', color: '#999', fontStyle: 'italic' }}>Aucune capacité configurée — cliquez Modifier pour en ajouter</span>}
+                : <span style={{ fontSize: '12px', color: '#999', fontStyle: 'italic' }}>Aucune capacité — cliquez Modifier</span>}
             </div>
           </div>
         );
       })}
 
-      {/* Modals */}
-      {editingCap && <CapaciteForm initial={editingCap === 'new' ? null : editingCap} onSave={saveCap} onClose={() => setEditingCap(null)} />}
-      {editingProfil && <ProfilForm initial={editingProfil === 'new' ? null : editingProfil} capacites={capacites} onSave={saveProfil} onClose={() => setEditingProfil(null)} />}
-      {deletingCap && <ConfirmDelete message={`Supprimer la capacité « ${deletingCap.nom} » ?`} onConfirm={removeCap} onCancel={() => setDeletingCap(null)} />}
-      {deletingProfil && <ConfirmDelete message={`Supprimer le profil « ${deletingProfil.nom} » ?`} onConfirm={removeProfil} onCancel={() => setDeletingProfil(null)} />}
+      {editing && <ProfilForm initial={editing === 'new' ? null : editing} capacites={capacites} onSave={save} onClose={() => setEditing(null)} />}
+      {deleting && <ConfirmDelete message={`Supprimer le profil « ${deleting.nom} » ?`} onConfirm={remove} onCancel={() => setDeleting(null)} />}
     </div>
   );
 }
 
-function CapaciteForm({ initial, onSave, onClose }) {
-  const [form, setForm] = useState({
-    id: initial?.id || null, nom: initial?.nom || '', description: initial?.description || '',
-    icone: initial?.icone || '🏷️', types_etablissement: initial?.types_etablissement || [],
-  });
-  const EMOJIS = ['👑', '🔑', '🔒', '🚛', '🍳', '☕', '🎂', '🔥', '⭐', '🏷️', '🛠️', '📋'];
-  return (
-    <Modal title={initial ? 'Modifier la capacité' : 'Nouvelle capacité'} onClose={onClose}>
-      <div style={S.field}><label style={S.label}>Icône</label><div style={S.chipRow}>{EMOJIS.map((e) => <button key={e} type="button" style={{ ...S.chip(form.icone === e), fontSize: '18px', padding: '6px 10px' }} onClick={() => setForm({ ...form, icone: e })}>{e}</button>)}</div></div>
-      <div style={S.field}><label style={S.label}>Nom</label><input style={S.input} value={form.nom} onChange={(e) => setForm({ ...form, nom: e.target.value })} placeholder="Ex: Barista" /></div>
-      <div style={S.field}><label style={S.label}>Description</label><input style={S.input} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Optionnel" /></div>
-      <div style={S.field}><label style={S.label}>Visible pour quels types ?</label><p style={S.infoText}>Vide = partout</p>
-        <div style={{ ...S.chipRow, marginTop: '6px' }}>{TYPES_ETABLISSEMENT.map((t) => <button key={t.value} type="button" style={S.chip(form.types_etablissement.includes(t.value))} onClick={() => { const a = form.types_etablissement.includes(t.value) ? form.types_etablissement.filter((x) => x !== t.value) : [...form.types_etablissement, t.value]; setForm({ ...form, types_etablissement: a }); }}>{t.label}</button>)}</div>
-      </div>
-      <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '16px' }}>
-        <button style={S.btnSecondary} onClick={onClose}>Annuler</button>
-        <button style={S.btnPrimary} disabled={!form.nom.trim()} onClick={() => onSave(form)}>{initial ? 'Enregistrer' : 'Créer'}</button>
-      </div>
-    </Modal>
-  );
-}
-
 function ProfilForm({ initial, capacites, onSave, onClose }) {
-  const [form, setForm] = useState({
-    id: initial?.id || null, nom: initial?.nom || '', description: initial?.description || '',
-    capacite_ids: initial?.capacite_ids || [],
-  });
-  const toggleCap = (capId) => {
-    setForm({ ...form, capacite_ids: form.capacite_ids.includes(capId) ? form.capacite_ids.filter((c) => c !== capId) : [...form.capacite_ids, capId] });
-  };
+  const [form, setForm] = useState({ id: initial?.id || null, nom: initial?.nom || '', description: initial?.description || '', capacite_ids: initial?.capacite_ids || [] });
+  const toggleCap = (capId) => setForm({ ...form, capacite_ids: form.capacite_ids.includes(capId) ? form.capacite_ids.filter((c) => c !== capId) : [...form.capacite_ids, capId] });
   return (
     <Modal title={initial ? `Modifier « ${initial.nom} »` : 'Nouveau profil'} onClose={onClose}>
-      <div style={S.field}><label style={S.label}>Nom du profil</label><input style={S.input} value={form.nom} onChange={(e) => setForm({ ...form, nom: e.target.value })} placeholder="Ex: Manager, Équipier sénior…" /></div>
+      <div style={S.field}><label style={S.label}>Nom du profil</label><input style={S.input} value={form.nom} onChange={(e) => setForm({ ...form, nom: e.target.value })} placeholder="Ex: Manager, Équipier polyvalent, Chauffeur FT…" /></div>
       <div style={S.field}><label style={S.label}>Description</label><input style={S.input} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Optionnel" /></div>
       <div style={S.field}>
-        <label style={S.label}>Capacités de ce profil</label>
-        <p style={S.infoText}>Cochez les capacités que ce type d'employé possède</p>
-        <div style={{ marginTop: '8px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+        <label style={{ ...S.label, fontSize: '14px', marginBottom: '10px' }}>Capacités de ce profil</label>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
           {capacites.map((cap) => {
             const checked = form.capacite_ids.includes(cap.id);
             return (
-              <div key={cap.id}
-                style={{ ...S.checkbox, backgroundColor: checked ? B.bleustoLight : 'transparent', border: `1px solid ${checked ? B.bleusto : '#eee'}`, borderRadius: '8px' }}
-                onClick={() => toggleCap(cap.id)}>
+              <div key={cap.id} style={{ ...S.checkbox, backgroundColor: checked ? B.bleustoLight : 'transparent', border: `1px solid ${checked ? B.bleusto : '#eee'}`, borderRadius: '8px' }} onClick={() => toggleCap(cap.id)}>
                 <input type="checkbox" checked={checked} onChange={() => {}} style={{ accentColor: B.bluck, width: '18px', height: '18px', cursor: 'pointer' }} />
                 <span style={{ fontSize: '20px' }}>{cap.icone}</span>
                 <div>
@@ -600,12 +402,8 @@ function ProfilForm({ initial, capacites, onSave, onClose }) {
             );
           })}
         </div>
-        {!capacites.length && <p style={{ ...S.infoText, color: B.gochu }}>Créez d'abord des capacités dans la section ci-dessus.</p>}
       </div>
-      <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '16px' }}>
-        <button style={S.btnSecondary} onClick={onClose}>Annuler</button>
-        <button style={S.btnPrimary} disabled={!form.nom.trim()} onClick={() => onSave(form)}>{initial ? 'Enregistrer' : 'Créer'}</button>
-      </div>
+      <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '16px' }}><button style={S.btnSecondary} onClick={onClose}>Annuler</button><button style={S.btnPrimary} disabled={!form.nom.trim()} onClick={() => onSave(form)}>{initial ? 'Enregistrer' : 'Créer'}</button></div>
     </Modal>
   );
 }
@@ -613,8 +411,7 @@ function ProfilForm({ initial, capacites, onSave, onClose }) {
 // ═══════════════════════════════════════════════════════════════
 // TAB 3 : ÉQUIPE
 // ═══════════════════════════════════════════════════════════════
-
-function TabEquipe() {
+function TabEquipe({ onRefresh }) {
   const [employees, setEmployees] = useState([]);
   const [etablissements, setEtablissements] = useState([]);
   const [capacites, setCapacites] = useState([]);
@@ -633,20 +430,12 @@ function TabEquipe() {
       supabase.from('profils').select('*').order('sort_order'),
       supabase.from('employee_capacites').select('*'),
     ]);
-    setEmployees(empRes.data || []);
-    setEtablissements(etRes.data || []);
-    setCapacites(capRes.data || []);
-    setProfils(profRes.data || []);
-    setEmpCapacites(ecRes.data || []);
+    setEmployees(empRes.data || []); setEtablissements(etRes.data || []); setCapacites(capRes.data || []); setProfils(profRes.data || []); setEmpCapacites(ecRes.data || []);
     setLoading(false);
   }, []);
-
   useEffect(() => { fetch_(); }, [fetch_]);
 
-  const getEmpCaps = (empId) => {
-    const ids = empCapacites.filter((ec) => ec.employee_id === empId).map((ec) => ec.capacite_id);
-    return capacites.filter((c) => ids.includes(c.id));
-  };
+  const getEmpCaps = (empId) => { const ids = empCapacites.filter((ec) => ec.employee_id === empId).map((ec) => ec.capacite_id); return capacites.filter((c) => ids.includes(c.id)); };
 
   const save = async (form, selectedCapIds) => {
     const p = { name: form.name, initials: form.initials, role: form.role, team: form.team, color: form.color, contract_hours: form.contract_hours, is_active: form.is_active, statut: form.statut, etablissement_id: form.etablissement_id || null, profil_id: form.profil_id || null };
@@ -658,33 +447,26 @@ function TabEquipe() {
       if (selectedCapIds.length) await supabase.from('employee_capacites').insert(selectedCapIds.map((cid) => ({ employee_id: empId, capacite_id: cid })));
     }
     setEditing(null); fetch_();
+    if (onRefresh) onRefresh();
   };
-
-  const remove = async () => { if (deleting) { await supabase.from('employees').delete().eq('id', deleting.id); setDeleting(null); fetch_(); } };
+  const remove = async () => { if (deleting) { await supabase.from('employees').delete().eq('id', deleting.id); setDeleting(null); fetch_(); if (onRefresh) onRefresh(); } };
 
   if (loading) return <p style={S.emptyState}>Chargement…</p>;
-
   return (
     <div>
       <div style={S.topBar}>
-        <p style={{ margin: 0, fontSize: '13px', color: '#666' }}>
-          {employees.filter((e) => e.is_active).length} actif{employees.filter((e) => e.is_active).length > 1 ? 's' : ''} / {employees.length} total
-        </p>
+        <p style={{ margin: 0, fontSize: '13px', color: '#666' }}>{employees.filter((e) => e.is_active).length} actif{employees.filter((e) => e.is_active).length > 1 ? 's' : ''} / {employees.length} total</p>
         <button style={S.btnPrimary} onClick={() => setEditing('new')}>+ Ajouter</button>
       </div>
-
       {employees.map((emp) => {
-        const caps = getEmpCaps(emp.id);
-        const etab = etablissements.find((e) => e.id === emp.etablissement_id);
-        const prof = profils.find((p) => p.id === emp.profil_id);
+        const caps = getEmpCaps(emp.id); const etab = etablissements.find((e) => e.id === emp.etablissement_id); const prof = profils.find((p) => p.id === emp.profil_id);
         return (
           <div key={emp.id} style={{ ...S.card, opacity: emp.is_active ? 1 : 0.5, borderLeft: `4px solid ${emp.color || B.bleusto}` }}>
             <div style={S.cardHeader}>
               <div>
                 <h4 style={{ ...S.cardTitle, display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '30px', height: '30px', borderRadius: '50%', backgroundColor: emp.color || B.bleusto, color: B.white, fontSize: '12px', fontWeight: '700' }}>{emp.initials || '?'}</span>
-                  {emp.name}
-                  {!emp.is_active && <span style={S.badge('#ccc')}>Inactif</span>}
+                  {emp.name}{!emp.is_active && <span style={S.badge('#ccc')}>Inactif</span>}
                 </h4>
                 <div style={{ marginTop: '4px', fontSize: '12px', color: '#666' }}>
                   {prof && <span style={S.badge(B.corail)}>{prof.nom}</span>}
@@ -701,101 +483,78 @@ function TabEquipe() {
               </div>
             </div>
             {caps.length > 0 && <div style={{ marginTop: '4px' }}>{caps.map((c) => <span key={c.id} style={S.tag}>{c.icone} {c.nom}</span>)}</div>}
-            {showDispos === emp.id && <DispoGrid employeeId={emp.id} />}
+            {showDispos === emp.id && <DispoGrid employeeId={emp.id} onRefresh={onRefresh} />}
           </div>
         );
       })}
-
-      {editing && (
-        <EmployeeForm initial={editing === 'new' ? null : editing} etablissements={etablissements} capacites={capacites} profils={profils}
-          initialCapIds={editing !== 'new' ? empCapacites.filter((ec) => ec.employee_id === editing.id).map((ec) => ec.capacite_id) : []}
-          onSave={save} onClose={() => setEditing(null)} />
-      )}
+      {editing && <EmployeeForm initial={editing === 'new' ? null : editing} etablissements={etablissements} capacites={capacites} profils={profils} initialCapIds={editing !== 'new' ? empCapacites.filter((ec) => ec.employee_id === editing.id).map((ec) => ec.capacite_id) : []} onSave={save} onClose={() => setEditing(null)} />}
       {deleting && <ConfirmDelete message={`Supprimer « ${deleting.name} » ?`} onConfirm={remove} onCancel={() => setDeleting(null)} />}
     </div>
   );
 }
 
 function EmployeeForm({ initial, etablissements, capacites, profils, initialCapIds, onSave, onClose }) {
-  const COLORS = ['#b8d5e0', '#003f87', '#ed1548', '#f26f63', '#2ecc71', '#9b59b6', '#f39c12', '#1abc9c', '#e67e22', '#95a5a6'];
-  const [form, setForm] = useState({
-    id: initial?.id || null, name: initial?.name || '', initials: initial?.initials || '', role: initial?.role || '', team: initial?.team || '',
-    color: initial?.color || COLORS[0], contract_hours: initial?.contract_hours || 39, is_active: initial?.is_active ?? true,
-    statut: initial?.statut || 'Salarié', etablissement_id: initial?.etablissement_id || '', profil_id: initial?.profil_id || '',
-  });
+  const COLORS = ['#b8d5e0','#003f87','#ed1548','#f26f63','#2ecc71','#9b59b6','#f39c12','#1abc9c','#e67e22','#95a5a6'];
+  const [form, setForm] = useState({ id: initial?.id || null, name: initial?.name || '', initials: initial?.initials || '', role: initial?.role || '', team: initial?.team || '', color: initial?.color || COLORS[0], contract_hours: initial?.contract_hours || 39, is_active: initial?.is_active ?? true, statut: initial?.statut || 'Salarié', etablissement_id: initial?.etablissement_id || '', profil_id: initial?.profil_id || '' });
   const [capIds, setCapIds] = useState(initialCapIds);
-  const [overridden, setOverridden] = useState(initialCapIds.length > 0);
+  const [overridden, setOverridden] = useState(false);
 
   const applyProfil = (profilId) => {
     setForm({ ...form, profil_id: profilId });
-    if (profilId) {
-      const prof = profils.find((p) => p.id === profilId);
-      if (prof) { setCapIds(prof.capacite_ids || []); setOverridden(false); }
-    }
+    if (profilId) { const prof = profils.find((p) => p.id === profilId); if (prof) { setCapIds(prof.capacite_ids || []); setOverridden(false); } }
   };
 
   return (
     <Modal title={initial ? `Modifier ${initial.name}` : 'Nouvel employé'} onClose={onClose}>
       <div style={S.row}>
-        <div style={{ ...S.field, flex: 2 }}><label style={S.label}>Nom</label>
-          <input style={S.input} value={form.name} onChange={(e) => { const n = e.target.value; const a = n.split(' ').map((w) => w[0] || '').join('').toUpperCase().slice(0, 3); setForm({ ...form, name: n, initials: form.id ? form.initials : a }); }} />
-        </div>
-        <div style={{ ...S.field, flex: 1 }}><label style={S.label}>Initiales</label>
-          <input style={S.input} value={form.initials} maxLength={3} onChange={(e) => setForm({ ...form, initials: e.target.value.toUpperCase() })} />
-        </div>
+        <div style={{ ...S.field, flex: 2 }}><label style={S.label}>Nom</label><input style={S.input} value={form.name} onChange={(e) => { const n = e.target.value; const a = n.split(' ').map((w) => w[0] || '').join('').toUpperCase().slice(0, 3); setForm({ ...form, name: n, initials: form.id ? form.initials : a }); }} /></div>
+        <div style={{ ...S.field, flex: 1 }}><label style={S.label}>Initiales</label><input style={S.input} value={form.initials} maxLength={3} onChange={(e) => setForm({ ...form, initials: e.target.value.toUpperCase() })} /></div>
       </div>
 
-      {/* ── Profil = le choix principal ── */}
       <div style={{ ...S.field, padding: '12px', backgroundColor: B.bleustoLight, borderRadius: '10px', border: `1px solid ${B.bleusto}` }}>
         <label style={{ ...S.label, fontSize: '14px', marginBottom: '8px' }}>👤 Profil</label>
-        <select style={S.select} value={form.profil_id} onChange={(e) => applyProfil(e.target.value)}>
-          <option value="">— Aucun profil —</option>
-          {profils.map((p) => <option key={p.id} value={p.id}>{p.nom}</option>)}
-        </select>
-        {form.profil_id && !overridden && (
-          <p style={{ ...S.infoText, marginTop: '6px' }}>
-            ✓ Capacités héritées du profil. <button type="button" style={{ ...S.btnSmall, color: B.bluck, backgroundColor: 'transparent', textDecoration: 'underline', padding: '0' }} onClick={() => setOverridden(true)}>Ajuster individuellement</button>
-          </p>
-        )}
-        {(overridden || !form.profil_id) && (
-          <div style={{ marginTop: '10px' }}>
-            <label style={{ ...S.label, fontSize: '12px' }}>Capacités {form.profil_id ? '(modifiées)' : ''}</label>
-            <CapacitesPicker allCapacites={capacites} selected={capIds} onChange={(c) => { setCapIds(c); setOverridden(true); }} />
-          </div>
+        {!profils.length && <p style={{ ...S.infoText, color: B.gochu }}>Créez d'abord des profils dans l'onglet Profils.</p>}
+        {profils.length > 0 && (
+          <>
+            <select style={S.select} value={form.profil_id} onChange={(e) => applyProfil(e.target.value)}>
+              <option value="">— Aucun profil —</option>
+              {profils.map((p) => <option key={p.id} value={p.id}>{p.nom}</option>)}
+            </select>
+            {form.profil_id && !overridden && (
+              <p style={{ ...S.infoText, marginTop: '8px' }}>
+                ✓ Capacités héritées du profil.{' '}
+                <button type="button" style={{ ...S.btnSmall, color: B.bluck, backgroundColor: 'transparent', textDecoration: 'underline', padding: 0, fontSize: '12px' }} onClick={() => setOverridden(true)}>Ajuster individuellement</button>
+              </p>
+            )}
+            {(overridden || !form.profil_id) && (
+              <div style={{ marginTop: '10px' }}>
+                <label style={{ ...S.label, fontSize: '12px' }}>Capacités {form.profil_id ? '(modifiées)' : ''}</label>
+                <CapacitesPicker allCapacites={capacites} selected={capIds} onChange={(c) => { setCapIds(c); setOverridden(true); }} />
+              </div>
+            )}
+          </>
         )}
       </div>
 
       <div style={S.row}>
-        <div style={{ ...S.field, flex: 1 }}><label style={S.label}>Rôle</label><input style={S.input} value={form.role} placeholder="Ex: Manager…" onChange={(e) => setForm({ ...form, role: e.target.value })} /></div>
-        <div style={{ ...S.field, flex: 1 }}><label style={S.label}>Statut</label>
-          <select style={S.select} value={form.statut} onChange={(e) => setForm({ ...form, statut: e.target.value })}>{STATUTS_EMPLOYE.map((s) => <option key={s} value={s}>{s}</option>)}</select>
-        </div>
+        <div style={{ ...S.field, flex: 1 }}><label style={S.label}>Rôle</label><input style={S.input} value={form.role} placeholder="Optionnel" onChange={(e) => setForm({ ...form, role: e.target.value })} /></div>
+        <div style={{ ...S.field, flex: 1 }}><label style={S.label}>Statut</label><select style={S.select} value={form.statut} onChange={(e) => setForm({ ...form, statut: e.target.value })}>{STATUTS_EMPLOYE.map((s) => <option key={s} value={s}>{s}</option>)}</select></div>
       </div>
       <div style={S.row}>
         <div style={{ ...S.field, flex: 1 }}><label style={S.label}>Heures contrat</label><input type="number" min={0} max={48} style={S.input} value={form.contract_hours} onChange={(e) => setForm({ ...form, contract_hours: parseFloat(e.target.value) || 0 })} /></div>
-        <div style={{ ...S.field, flex: 1 }}><label style={S.label}>Établissement principal</label>
-          <select style={S.select} value={form.etablissement_id} onChange={(e) => setForm({ ...form, etablissement_id: e.target.value })}>
-            <option value="">— Aucun —</option>{etablissements.map((et) => <option key={et.id} value={et.id}>{et.nom}</option>)}
-          </select>
-        </div>
+        <div style={{ ...S.field, flex: 1 }}><label style={S.label}>Établissement</label><select style={S.select} value={form.etablissement_id} onChange={(e) => setForm({ ...form, etablissement_id: e.target.value })}><option value="">— Aucun —</option>{etablissements.map((et) => <option key={et.id} value={et.id}>{et.nom}</option>)}</select></div>
       </div>
-      <div style={S.field}><label style={S.label}>Couleur</label>
-        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>{COLORS.map((c) => <button key={c} type="button" style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: c, border: form.color === c ? `3px solid ${B.black}` : '2px solid transparent', cursor: 'pointer' }} onClick={() => setForm({ ...form, color: c })} />)}</div>
-      </div>
+      <div style={S.field}><label style={S.label}>Couleur</label><div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>{COLORS.map((c) => <button key={c} type="button" style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: c, border: form.color === c ? `3px solid ${B.black}` : '2px solid transparent', cursor: 'pointer' }} onClick={() => setForm({ ...form, color: c })} />)}</div></div>
       <div style={S.field}><label style={{ ...S.label, display: 'flex', alignItems: 'center', gap: '6px' }}><input type="checkbox" checked={form.is_active} onChange={(e) => setForm({ ...form, is_active: e.target.checked })} /> Actif</label></div>
-      <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '16px' }}>
-        <button style={S.btnSecondary} onClick={onClose}>Annuler</button>
-        <button style={S.btnPrimary} disabled={!form.name.trim()} onClick={() => onSave(form, capIds)}>{initial ? 'Enregistrer' : 'Créer'}</button>
-      </div>
+      <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '16px' }}><button style={S.btnSecondary} onClick={onClose}>Annuler</button><button style={S.btnPrimary} disabled={!form.name.trim()} onClick={() => onSave(form, capIds)}>{initial ? 'Enregistrer' : 'Créer'}</button></div>
     </Modal>
   );
 }
 
-function DispoGrid({ employeeId }) {
+function DispoGrid({ employeeId, onRefresh }) {
   const [dispos, setDispos] = useState([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => { (async () => { const { data } = await supabase.from('disponibilites').select('*').eq('employee_id', employeeId); setDispos(data || []); setLoading(false); })(); }, [employeeId]);
-
   const toggle = async (dayCode) => {
     const existing = dispos.find((d) => d.day_of_week === dayCode);
     if (existing) {
@@ -806,44 +565,41 @@ function DispoGrid({ employeeId }) {
       const { data } = await supabase.from('disponibilites').insert({ employee_id: employeeId, day_of_week: dayCode, is_available: false, note: 'Indisponible fixe' }).select().single();
       if (data) setDispos([...dispos, data]);
     }
+    if (onRefresh) onRefresh();
   };
-  if (loading) return <p style={{ fontSize: '12px', color: '#999' }}>Chargement dispos…</p>;
+  if (loading) return <p style={{ fontSize: '12px', color: '#999' }}>Chargement…</p>;
   return (
     <div style={{ marginTop: '10px', paddingTop: '10px', borderTop: `1px dashed ${B.bleusto}` }}>
       <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
         {JOURS.map((j) => { const d = dispos.find((x) => x.day_of_week === j.code); const ok = !d || d.is_available; return (
           <button key={j.code} type="button" style={{ padding: '6px 12px', borderRadius: '8px', fontSize: '12px', fontWeight: '600', border: `2px solid ${ok ? '#2ecc71' : B.gochu}`, backgroundColor: ok ? '#eafaf1' : '#fdeaea', color: ok ? '#27ae60' : B.gochu, cursor: 'pointer', transition: 'all 0.15s' }} onClick={() => toggle(j.code)}>
             {j.label} {ok ? '✓' : '✗'}
-          </button>
-        ); })}
+          </button>); })}
       </div>
-      <p style={S.infoText}>Vert = disponible · Rouge = indisponible fixe · Cliquez pour basculer</p>
+      <p style={S.infoText}>Vert = disponible · Rouge = indisponible fixe</p>
     </div>
   );
 }
 
 // ═══════════════════════════════════════════════════════════════
-// COMPOSANT PRINCIPAL
+// MAIN
 // ═══════════════════════════════════════════════════════════════
-
 const SUB_TABS = [
   { id: 'etablissement', label: 'Établissements & Services', icon: '🏪' },
-  { id: 'capacites', label: 'Capacités & Profils', icon: '🏷️' },
+  { id: 'profils', label: 'Profils', icon: '👤' },
   { id: 'equipe', label: 'Équipe', icon: '👥' },
 ];
 
-export default function Settings() {
+export default function Settings({ onRefresh }) {
   const [activeTab, setActiveTab] = useState('etablissement');
   return (
     <div style={S.page}>
       <nav style={S.subTabs}>
-        {SUB_TABS.map((tab) => (
-          <button key={tab.id} style={S.subTab(activeTab === tab.id)} onClick={() => setActiveTab(tab.id)}>{tab.icon} {tab.label}</button>
-        ))}
+        {SUB_TABS.map((tab) => <button key={tab.id} style={S.subTab(activeTab === tab.id)} onClick={() => setActiveTab(tab.id)}>{tab.icon} {tab.label}</button>)}
       </nav>
       {activeTab === 'etablissement' && <TabEtablissements />}
-      {activeTab === 'capacites' && <TabCapacitesProfils />}
-      {activeTab === 'equipe' && <TabEquipe />}
+      {activeTab === 'profils' && <TabProfils />}
+      {activeTab === 'equipe' && <TabEquipe onRefresh={onRefresh} />}
     </div>
   );
 }
