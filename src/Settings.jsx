@@ -32,7 +32,7 @@ const S = {
   btnDanger:{padding:'6px 12px',backgroundColor:'transparent',color:B.gochu,border:`1px solid ${B.gochu}`,borderRadius:'6px',fontSize:'12px',cursor:'pointer'},
   btnSmall:{padding:'4px 10px',fontSize:'12px',borderRadius:'6px',cursor:'pointer',border:'none',fontWeight:'500'},
   input:{width:'100%',padding:'10px 12px',border:`1px solid ${B.bleustoDark}`,borderRadius:'8px',fontSize:'14px',fontFamily:"'Montserrat',Arial,sans-serif",outline:'none',boxSizing:'border-box'},
-  select:{width:'100%',padding:'10px 12px',border:`1px solid ${B.bleustoDark}`,borderRadius:'8px',fontSize:'14px',fontFamily:"'Montserrat',Arial,sans-serif",outline:'none',backgroundColor:B.white,boxSizing:'border-box'},
+  select:{width:'100%',padding:'10px 12px',border:`1px solid ${B.bleustoDark}`,borderRadius:'8px',fontSize:'14px',fontFamily:"'Montserrat',Arial,sans-serif",outline:'none',backgroundColor:'#ffffff',boxSizing:'border-box'},
   label:{display:'block',fontSize:'13px',fontWeight:'600',color:B.bluck,marginBottom:'4px'},
   field:{marginBottom:'14px'},
   row:{display:'flex',gap:'12px',flexWrap:'wrap'},
