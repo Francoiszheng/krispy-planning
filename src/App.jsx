@@ -153,7 +153,7 @@ export default function App() {
             )}
           </div>
 
-          <nav style={{display:'flex',overflowX:'auto'}}>
+          <nav style={{display:'flex'}}>
             {etabTabs.map(t => (
               <button key={t.id} onClick={() => setTab(t.id)} style={{
                 padding:'8px 22px',border:'none',background:'transparent',cursor:'pointer',fontFamily:'inherit',
