@@ -7,7 +7,7 @@ const JOURS = [
 ];
 const TYPES_ETABLISSEMENT = [
   { value:'restaurant',label:'Restaurant' },{ value:'foodtruck',label:'Food Truck' },
-  { value:'lab',label:'Labo de production' },{ value:'autre',label:'Autre' },
+  { value:'lab',label:'Laboratoire de production' },{ value:'autre',label:'Autre' },
 ];
 const STATUTS_EMPLOYE = ['Salarié','Associé','Gérant'];
 const B = { bleusto:'#b8d5e0',bluck:'#003f87',gochu:'#ed1548',corail:'#f26f63',white:'#fff9f3',black:'#000000',bleustoLight:'#ddedf3',bleustoDark:'#9cc5d4' };
