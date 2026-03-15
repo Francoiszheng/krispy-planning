@@ -118,7 +118,15 @@ function TabEtablissements({onRefresh}){
 
           {/* ── Section 1 : Horaires (collapsible, fermé par défaut) ── */}
           <Collapsible label="Horaires d'ouverture" icon="🕐" open={!!showHoraires[et.id]} onToggle={()=>toggleHoraires(et.id)}>
-            <HorairesInline etab={et} onSave={async(h)=>{await supabase.from('etablissements').update({horaires_ouverture:h,updated_at:new Date().toISOString()}).eq('id',et.id);fetch_();}}/>
+            <div>
+              <div style={{display:'flex',flexWrap:'wrap',gap:'6px'}}>
+                {JOURS.map(j=>{const pl=et.horaires_ouverture?.[j.code];return(
+                  <div key={j.code} style={{padding:'4px 10px',borderRadius:'6px',fontSize:'12px',backgroundColor:pl?B.bleustoLight:'#f8f8f8',color:pl?B.bluck:'#bbb',border:`1px solid ${pl?B.bleusto:'#eee'}`}}>
+                    <strong>{j.label}</strong>{pl?pl.map((p,i)=><span key={i}>{i>0?' + ':' '}{p.debut}–{p.fin}</span>):' Fermé'}
+                  </div>);})}
+              </div>
+              <div style={{marginTop:'8px'}}><button style={S.btnSecondary} onClick={()=>setEditingEtab(et)}>Modifier les horaires</button></div>
+            </div>
           </Collapsible>
 
           <div style={{borderTop:`1px solid ${B.bleusto}`,marginTop:'4px'}}/>
@@ -188,46 +196,37 @@ function TabEtablissements({onRefresh}){
   </div>);
 }
 
-// ── Horaires inline editor (inside collapsible) ──
-function HorairesInline({etab,onSave}){
-  const [h,setH]=useState(etab.horaires_ouverture||{});
-  const [dirty,setDirty]=useState(false);
-  const toggleJour=j=>{const n={...h};if(n[j])delete n[j];else n[j]=[{debut:'12:00',fin:'14:15'},{debut:'19:00',fin:'22:00'}];setH(n);setDirty(true);};
-  const updatePlage=(j,i,f,v)=>{const n={...h};const p=[...(n[j]||[])];p[i]={...p[i],[f]:v};n[j]=p;setH(n);setDirty(true);};
-  const addPlage=j=>{const n={...h};n[j]=[...(n[j]||[]),{debut:'19:00',fin:'22:00'}];setH(n);setDirty(true);};
-  const removePlage=(j,i)=>{const n={...h};const p=[...(n[j]||[])];p.splice(i,1);if(!p.length)delete n[j];else n[j]=p;setH(n);setDirty(true);};
-
-  return(<div>
-    <div style={{display:'flex',flexDirection:'column',gap:'6px'}}>
-      {JOURS.map(j=>{const plages=h[j.code];const isO=!!plages;return(
-        <div key={j.code} style={{padding:'6px 8px',borderRadius:'6px',backgroundColor:isO?B.bleustoLight:'transparent',border:`1px solid ${isO?B.bleusto:'#eee'}`}}>
-          <div style={{display:'flex',alignItems:'center',gap:'8px'}}>
-            <button type="button" style={{...S.chip(isO),minWidth:'44px',padding:'4px 10px',fontSize:'12px'}} onClick={()=>toggleJour(j.code)}>{j.label}</button>
-            {!isO&&<span style={{fontSize:'11px',color:'#bbb'}}>Fermé</span>}
-            {isO&&plages.map((p,i)=>(
-              <div key={i} style={{display:'flex',alignItems:'center',gap:'4px'}}>
-                {i>0&&<span style={{color:'#ccc',fontSize:'11px'}}>+</span>}
-                <input type="time" style={{...S.input,width:'95px',padding:'3px 6px',fontSize:'12px'}} value={p.debut} onChange={e=>updatePlage(j.code,i,'debut',e.target.value)}/>
-                <span style={{color:'#999',fontSize:'11px'}}>→</span>
-                <input type="time" style={{...S.input,width:'95px',padding:'3px 6px',fontSize:'12px'}} value={p.fin} onChange={e=>updatePlage(j.code,i,'fin',e.target.value)}/>
-                {plages.length>1&&<button type="button" style={{...S.btnSmall,color:B.gochu,backgroundColor:'#fee',padding:'2px 6px',fontSize:'10px'}} onClick={()=>removePlage(j.code,i)}>✕</button>}
-              </div>
-            ))}
-            {isO&&<button type="button" style={{...S.btnSmall,color:B.bluck,backgroundColor:B.white,border:`1px dashed ${B.bleustoDark}`,padding:'2px 8px',fontSize:'10px'}} onClick={()=>addPlage(j.code)}>+</button>}
-          </div>
-        </div>);})}
-    </div>
-    {dirty&&<div style={{marginTop:'8px',display:'flex',justifyContent:'flex-end'}}><button style={{...S.btnPrimary,padding:'6px 16px',fontSize:'12px'}} onClick={()=>{onSave(h);setDirty(false);}}>Enregistrer les horaires</button></div>}
-  </div>);
-}
-
 // ── Forms ──
 function EtablissementForm({initial,onSave,onClose}){
   const [form,setForm]=useState({id:initial?.id||null,nom:initial?.nom||'',type:initial?.type||'restaurant',horaires_ouverture:initial?.horaires_ouverture||{},notes:initial?.notes||''});
+  const toggleJour=j=>{const h={...form.horaires_ouverture};if(h[j])delete h[j];else h[j]=[{debut:'12:00',fin:'14:15'},{debut:'19:00',fin:'22:00'}];setForm({...form,horaires_ouverture:h});};
+  const updatePlage=(j,i,f,v)=>{const h={...form.horaires_ouverture};const p=[...(h[j]||[])];p[i]={...p[i],[f]:v};h[j]=p;setForm({...form,horaires_ouverture:h});};
+  const addPlage=j=>{const h={...form.horaires_ouverture};h[j]=[...(h[j]||[]),{debut:'19:00',fin:'22:00'}];setForm({...form,horaires_ouverture:h});};
+  const removePlage=(j,i)=>{const h={...form.horaires_ouverture};const p=[...(h[j]||[])];p.splice(i,1);if(!p.length)delete h[j];else h[j]=p;setForm({...form,horaires_ouverture:h});};
   return(
     <Modal title={initial?"Modifier l'établissement":'Nouvel établissement'} onClose={onClose}>
       <div style={S.field}><label style={S.label}>Nom</label><input style={S.input} value={form.nom} onChange={e=>setForm({...form,nom:e.target.value})} placeholder="Nom de l'établissement"/></div>
       <div style={S.field}><label style={S.label}>Type</label><select style={S.select} value={form.type} onChange={e=>setForm({...form,type:e.target.value})}>{TYPES_ETABLISSEMENT.map(t=><option key={t.value} value={t.value}>{t.label}</option>)}</select></div>
+      <div style={S.field}><label style={S.label}>Horaires d'ouverture</label><p style={S.infoText}>Activez un jour, puis ajoutez des plages</p>
+        <div style={{display:'flex',flexDirection:'column',gap:'6px',marginTop:'8px'}}>
+          {JOURS.map(j=>{const plages=form.horaires_ouverture[j.code];const isO=!!plages;return(
+            <div key={j.code} style={{padding:'6px 8px',borderRadius:'6px',backgroundColor:isO?B.bleustoLight:'transparent',border:`1px solid ${isO?B.bleusto:'#eee'}`}}>
+              <div style={{display:'flex',alignItems:'center',gap:'8px'}}>
+                <button type="button" style={{...S.chip(isO),minWidth:'44px',padding:'4px 10px',fontSize:'12px'}} onClick={()=>toggleJour(j.code)}>{j.label}</button>
+                {!isO&&<span style={{fontSize:'11px',color:'#bbb'}}>Fermé</span>}
+                {isO&&plages.map((p,i)=>(
+                  <div key={i} style={{display:'flex',alignItems:'center',gap:'4px'}}>
+                    {i>0&&<span style={{color:'#ccc',fontSize:'11px'}}>+</span>}
+                    <input type="time" style={{...S.input,width:'95px',padding:'3px 6px',fontSize:'12px'}} value={p.debut} onChange={e=>updatePlage(j.code,i,'debut',e.target.value)}/>
+                    <span style={{color:'#999',fontSize:'11px'}}>→</span>
+                    <input type="time" style={{...S.input,width:'95px',padding:'3px 6px',fontSize:'12px'}} value={p.fin} onChange={e=>updatePlage(j.code,i,'fin',e.target.value)}/>
+                    {plages.length>1&&<button type="button" style={{...S.btnSmall,color:B.gochu,backgroundColor:'#fee',padding:'2px 6px',fontSize:'10px'}} onClick={()=>removePlage(j.code,i)}>✕</button>}
+                  </div>))}
+                {isO&&<button type="button" style={{...S.btnSmall,color:B.bluck,backgroundColor:B.white,border:`1px dashed ${B.bleustoDark}`,padding:'2px 8px',fontSize:'10px'}} onClick={()=>addPlage(j.code)}>+</button>}
+              </div>
+            </div>);})}
+        </div>
+      </div>
       <div style={S.field}><label style={S.label}>Notes</label><textarea style={{...S.input,minHeight:'50px',resize:'vertical'}} value={form.notes} onChange={e=>setForm({...form,notes:e.target.value})}/></div>
       <div style={{display:'flex',gap:'10px',justifyContent:'flex-end',marginTop:'16px'}}><button style={S.btnSecondary} onClick={onClose}>Annuler</button><button style={S.btnPrimary} disabled={!form.nom.trim()} onClick={()=>onSave(form)}>{initial?'Enregistrer':'Créer'}</button></div>
     </Modal>
@@ -366,7 +365,7 @@ function EmployeeForm({initial,etablissements,profils,onSave,onClose}){
   const [form,setForm]=useState({id:initial?.id||null,prenom:initial?parts[0]||'':'',nom:initial?parts.slice(1).join(' ')||'':'',contract_hours:initial?.contract_hours||39,is_active:initial?.is_active??true,statut:initial?.statut||'Salarié',etablissement_id:initial?.etablissement_id||'',profil_id:initial?.profil_id||''});
   return(<Modal title={initial?`Modifier ${initial.name}`:'Nouvel employé'} onClose={onClose}>
     <div style={S.row}><div style={{...S.field,flex:1}}><label style={S.label}>Nom</label><input style={S.input} value={form.nom} onChange={e=>setForm({...form,nom:e.target.value})} placeholder="Nom"/></div><div style={{...S.field,flex:1}}><label style={S.label}>Prénom</label><input style={S.input} value={form.prenom} onChange={e=>setForm({...form,prenom:e.target.value})} placeholder="Prénom"/></div></div>
-    <div style={{...S.field,padding:'12px',backgroundColor:B.bleustoLight,borderRadius:'10px',border:`1px solid ${B.bleusto}`}}>
+    <div style={S.field}>
       <label style={{...S.label,fontSize:'14px',marginBottom:'8px'}}>👤 Profil</label>
       {!profils.length?<p style={{...S.infoText,color:B.gochu}}>Créez d'abord des profils dans l'onglet Profils.</p>:
         <select style={S.select} value={form.profil_id} onChange={e=>setForm({...form,profil_id:e.target.value})}><option value="">— Choisir un profil —</option>{profils.map(p=><option key={p.id} value={p.id}>{p.nom}</option>)}</select>}
