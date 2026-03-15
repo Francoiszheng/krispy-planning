@@ -121,7 +121,7 @@ function EtablissementForm({initial,onSave,onClose}){
   const removePlage=(j,i)=>{const h={...form.horaires_ouverture};const p=[...(h[j]||[])];p.splice(i,1);if(!p.length)delete h[j];else h[j]=p;setForm({...form,horaires_ouverture:h});};
   return(
     <Modal title={initial?"Modifier l'établissement":'Nouvel établissement'} onClose={onClose}>
-      <div style={S.field}><label style={S.label}>Nom</label><input style={S.input} value={form.nom} onChange={e=>setForm({...form,nom:e.target.value})} placeholder="Ex: Restaurant Biot"/></div>
+      <div style={S.field}><label style={S.label}>Nom</label><input style={S.input} value={form.nom} onChange={e=>setForm({...form,nom:e.target.value})} placeholder="Nom de l'établissement"/></div>
       <div style={S.field}><label style={S.label}>Type</label><select style={S.select} value={form.type} onChange={e=>setForm({...form,type:e.target.value})}>{TYPES_ETABLISSEMENT.map(t=><option key={t.value} value={t.value}>{t.label}</option>)}</select></div>
       <div style={S.field}><label style={S.label}>Horaires d'ouverture</label><p style={S.infoText}>Activez un jour, puis ajoutez des plages</p>
         <div style={{display:'flex',flexDirection:'column',gap:'8px',marginTop:'8px'}}>
