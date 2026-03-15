@@ -55,31 +55,6 @@ function PlanningTab({ etablissement, employees, weekDates, weekType }) {
         </div>
       </div>
 
-      {/* ── Aperçu horaires établissement ── */}
-      {etablissement.horaires_ouverture && Object.keys(etablissement.horaires_ouverture).length > 0 && (
-        <div style={{...card}}>
-          <h3 style={{margin:'0 0 10px',fontSize:14,fontWeight:700,color:B.bluck}}>Horaires d'ouverture</h3>
-          <div style={{display:'flex',flexWrap:'wrap',gap:12}}>
-            {DAYS.map((day,i) => {
-              const plages = etablissement.horaires_ouverture[day];
-              return (
-                <div key={day} style={{
-                  padding:'8px 12px',borderRadius:8,minWidth:80,textAlign:'center',
-                  backgroundColor:plages ? '#eafaf1' : '#f8f8f8',
-                  border:`1px solid ${plages ? '#2ecc71' : '#eee'}`,
-                }}>
-                  <div style={{fontSize:12,fontWeight:700,color:plages?B.bluck:'#bbb',marginBottom:2}}>{weekDates[i]}</div>
-                  <div style={{fontSize:11,fontWeight:600,color:plages?'#27ae60':'#ccc'}}>{day.slice(0,3)}</div>
-                  {plages ? plages.map((p,j) => (
-                    <div key={j} style={{fontSize:11,color:'#555',marginTop:2}}>{p.debut}–{p.fin}</div>
-                  )) : <div style={{fontSize:11,color:'#ccc'}}>Fermé</div>}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
       {/* ── Placeholder moteur ── */}
       <div style={{...card,background:B.white,border:`2px dashed ${B.bleustoDark}`,textAlign:'center',padding:'40px 20px'}}>
         <div style={{fontSize:32,marginBottom:12}}>🚧</div>
