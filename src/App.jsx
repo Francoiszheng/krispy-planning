@@ -1,6 +1,7 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { supabase } from './supabase';
 import SettingsTab from './Settings';
+import { usePlanning } from './usePlanningEngine';
 
 // ══════════════════════════════════════════════════════════════
 // CONSTANTS & UTILS
@@ -10,6 +11,7 @@ const B = { bleusto:'#b8d5e0', bluck:'#003f87', gochu:'#ed1548', corail:'#f26f63
 
 const fmtD = d => `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}`;
 const toLocalISO = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+
 function getMonday(iso) {
   const [y,m,d] = iso.split('-').map(Number);
   const date = new Date(y, m-1, d, 12, 0, 0);
@@ -20,55 +22,193 @@ function getMonday(iso) {
 
 const card = { background:'#fff', borderRadius:10, boxShadow:'0 1px 6px rgba(0,0,0,.06)', padding:16, marginBottom:12 };
 
+// Niveau de warning → couleurs
+const WL = {
+  CRITIQUE: { bg:'#fef2f2', border:'#ef4444', text:'#b91c1c', badge:'#ef4444' },
+  ATTENTION: { bg:'#fffbeb', border:'#f59e0b', text:'#92400e', badge:'#f59e0b' },
+  INFO:     { bg:'#eff6ff', border:'#3b82f6', text:'#1e40af', badge:'#3b82f6' },
+};
+
 // ══════════════════════════════════════════════════════════════
-// PLANNING TAB (per établissement)
+// PLANNING TAB — moteur générique
 // ══════════════════════════════════════════════════════════════
-function PlanningTab({ etablissement, employees, weekDates, weekType }) {
-  const team = employees.filter(e => e.etablissement_id === etablissement.id && e.is_active);
-  const services = []; // TODO Phase 1b — load from supabase
+function PlanningTab({ etablissement, weekDates }) {
+  const { result, loading, error, reload } = usePlanning(etablissement.id, weekDates);
+
+  if (loading) return (
+    <div style={{textAlign:'center', padding:'60px 20px', color:B.bluck}}>
+      <div style={{fontSize:24, marginBottom:12}}>⏳</div>
+      <p style={{fontSize:14}}>Génération du planning…</p>
+    </div>
+  );
+
+  if (error) return (
+    <div style={{...card, borderLeft:'4px solid #ef4444'}}>
+      <p style={{color:'#b91c1c', fontSize:13, margin:0}}>Erreur : {error}</p>
+      <button onClick={reload} style={{marginTop:8, fontSize:12, padding:'4px 12px', cursor:'pointer'}}>Réessayer</button>
+    </div>
+  );
+
+  if (!result) return null;
+  const { days, warnings, employeeHours, employees } = result;
+  const hasServices = days.some(d => d.services.length > 0);
 
   return (
     <div>
-      {/* ── Équipe ── */}
-      <div style={{...card, borderLeft:`4px solid ${B.bluck}`}}>
-        <h3 style={{margin:'0 0 12px',fontSize:15,fontWeight:700,color:B.bluck}}>
-          Équipe — {etablissement.nom}
-        </h3>
-        {!team.length && (
-          <p style={{color:'#999',fontSize:13,fontStyle:'italic'}}>
-            Aucun employé rattaché. Ajoutez des employés dans Paramètres → Équipe.
-          </p>
-        )}
-        <div style={{display:'flex',flexWrap:'wrap',gap:8}}>
-          {team.map(emp => (
-            <div key={emp.id} style={{
-              padding:'8px 14px',borderRadius:8,
-              backgroundColor:B.white,border:`1px solid ${B.bleusto}`,
-              fontSize:13,fontWeight:600,color:B.bluck,
-              display:'flex',alignItems:'center',gap:6,
-            }}>
-              <span>{emp.name}</span>
-              <span style={{fontSize:11,fontWeight:400,color:'#888'}}>{emp.contract_hours}h</span>
-              <span style={{fontSize:11,fontWeight:400,color:'#aaa'}}>{emp.statut}</span>
-            </div>
-          ))}
-        </div>
+      {/* ── Header établissement ── */}
+      <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:16}}>
+        <h2 style={{margin:0, fontSize:16, fontWeight:800, color:B.bluck}}>{etablissement.nom}</h2>
+        <button onClick={reload} style={{
+          background:'transparent', border:`1px solid ${B.bluck}`, borderRadius:6,
+          padding:'5px 14px', fontSize:12, fontWeight:600, color:B.bluck, cursor:'pointer',
+        }}>↺ Régénérer</button>
       </div>
 
-      {/* ── Placeholder moteur ── */}
-      <div style={{...card,background:B.white,border:`2px dashed ${B.bleustoDark}`,textAlign:'center',padding:'40px 20px'}}>
-        <div style={{fontSize:32,marginBottom:12}}>🚧</div>
-        <h3 style={{color:B.bluck,margin:'0 0 8px',fontSize:16}}>Moteur de planning</h3>
-        <p style={{color:'#888',fontSize:13,margin:0}}>
-          La génération automatique du planning pour « {etablissement.nom} » sera connectée ici.
-          <br/>Prochaine étape : Phase 1b — moteur générique basé sur les services et capacités.
-        </p>
-        {team.length > 0 && (
-          <p style={{color:B.bluck,fontSize:12,marginTop:12,fontWeight:600}}>
-            {team.length} employé{team.length>1?'s':''} prêt{team.length>1?'s':''} · Sem {weekType}
+      {/* ── Warnings ── */}
+      {warnings.length > 0 && (
+        <div style={{marginBottom:16}}>
+          {['CRITIQUE','ATTENTION','INFO'].map(level => {
+            const wList = warnings.filter(w => w.level === level);
+            if (!wList.length) return null;
+            const c = WL[level];
+            return (
+              <div key={level} style={{...card, background:c.bg, border:`1px solid ${c.border}`, marginBottom:8, padding:'10px 14px'}}>
+                <div style={{fontWeight:700, fontSize:12, color:c.text, marginBottom:4}}>
+                  <span style={{background:c.badge, color:'#fff', borderRadius:4, padding:'1px 7px', marginRight:8, fontSize:11}}>{level}</span>
+                  {wList.length} alerte{wList.length > 1 ? 's' : ''}
+                </div>
+                {wList.map((w,i) => (
+                  <div key={i} style={{fontSize:12, color:c.text, padding:'2px 0'}}>• {w.message}</div>
+                ))}
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* ── Grille 7 jours ── */}
+      {!hasServices ? (
+        <div style={{...card, background:B.white, border:`2px dashed ${B.bleusto}`, textAlign:'center', padding:'40px 20px'}}>
+          <div style={{fontSize:32, marginBottom:12}}>📋</div>
+          <h3 style={{color:B.bluck, margin:'0 0 8px', fontSize:16}}>Aucun service configuré</h3>
+          <p style={{color:'#888', fontSize:13, margin:0}}>
+            Ajoutez des services dans Paramètres pour générer un planning.
           </p>
-        )}
-      </div>
+        </div>
+      ) : (
+        <div style={{overflowX:'auto', marginBottom:16}}>
+          <div style={{display:'grid', gridTemplateColumns:'repeat(7, minmax(130px, 1fr))', gap:8, minWidth:910}}>
+            {days.map(day => {
+              const d = new Date(day.isoDate + 'T12:00:00');
+              const label = fmtD(d);
+              const isEmpty = day.services.length === 0;
+              return (
+                <div key={day.dayIdx} style={{
+                  ...card, margin:0, padding:10, minHeight:80,
+                  background: isEmpty ? '#f8fafc' : '#fff',
+                  border: `1px solid ${isEmpty ? '#e2e8f0' : B.bleusto}`,
+                }}>
+                  {/* En-tête jour */}
+                  <div style={{borderBottom:`2px solid ${B.bluck}`, paddingBottom:5, marginBottom:8}}>
+                    <div style={{fontWeight:800, fontSize:12, color:B.bluck}}>{DAYS[day.dayIdx]}</div>
+                    <div style={{fontSize:11, color:'#64748b'}}>{label}</div>
+                  </div>
+
+                  {isEmpty && <div style={{fontSize:11, color:'#94a3b8', textAlign:'center', marginTop:12}}>Fermé</div>}
+
+                  {/* Services */}
+                  {day.services.map(svc => (
+                    <div key={svc.id} style={{marginBottom:10}}>
+                      <div style={{
+                        fontWeight:700, fontSize:11, color:B.bluck,
+                        background:'#e0ecf7', borderRadius:4, padding:'2px 6px', marginBottom:4,
+                      }}>
+                        {svc.nom}
+                        <span style={{fontWeight:400, color:'#64748b', marginLeft:4, fontSize:10}}>
+                          {svc.heure_ouverture_clients}–{svc.heure_fermeture_clients}
+                        </span>
+                      </div>
+
+                      {/* Slots */}
+                      {svc.slots.map(slot => (
+                        <div key={slot.id} style={{marginBottom:4}}>
+                          <div style={{fontSize:10, color:'#64748b', marginBottom:2}}>
+                            {slot.nom}{' '}
+                            <span style={{color:'#94a3b8'}}>{slot.startLabel}→{slot.endLabel}</span>
+                          </div>
+                          <div style={{display:'flex', flexWrap:'wrap', gap:3}}>
+                            {slot.assignedEmployees.map(emp => (
+                              <span key={emp.id} style={{
+                                background: emp.couleur || '#6B7280',
+                                color:'#fff', borderRadius:4,
+                                padding:'1px 6px', fontSize:11, fontWeight:700,
+                              }}>{emp.initiales}</span>
+                            ))}
+                            {slot.missing > 0 && Array.from({length: slot.missing}).map((_, i) => (
+                              <span key={i} style={{
+                                background: slot.optionnel ? '#e2e8f0' : '#fecaca',
+                                color: slot.optionnel ? '#94a3b8' : '#b91c1c',
+                                borderRadius:4, padding:'1px 6px', fontSize:11, fontWeight:700,
+                              }}>{slot.optionnel ? '?' : '!'}</span>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* ── Récap heures ── */}
+      {employees.length > 0 && (
+        <div style={{...card}}>
+          <h3 style={{margin:'0 0 12px', fontSize:14, fontWeight:700, color:B.bluck}}>Récap heures semaine</h3>
+          <div style={{overflowX:'auto'}}>
+            <table style={{width:'100%', borderCollapse:'collapse', fontSize:12}}>
+              <thead>
+                <tr style={{background:'#f1f5f9'}}>
+                  <th style={{padding:'6px 10px', textAlign:'left', fontWeight:600, color:'#475569'}}>Employé</th>
+                  <th style={{padding:'6px 10px', textAlign:'center', fontWeight:600, color:'#475569'}}>Assignées</th>
+                  <th style={{padding:'6px 10px', textAlign:'center', fontWeight:600, color:'#475569'}}>Contrat</th>
+                  <th style={{padding:'6px 10px', textAlign:'center', fontWeight:600, color:'#475569'}}>Écart</th>
+                </tr>
+              </thead>
+              <tbody>
+                {employees.map(emp => {
+                  const h = employeeHours[emp.id];
+                  if (!h) return null;
+                  const diffColor = h.diff < -3 ? '#ef4444' : h.diff > 3 ? '#f59e0b' : '#16a34a';
+                  return (
+                    <tr key={emp.id} style={{borderBottom:'1px solid #f1f5f9'}}>
+                      <td style={{padding:'6px 10px'}}>
+                        <div style={{display:'flex', alignItems:'center', gap:6}}>
+                          <span style={{
+                            background: emp.couleur || '#6B7280', color:'#fff',
+                            borderRadius:4, padding:'1px 7px', fontSize:11, fontWeight:700,
+                          }}>{emp.initiales}</span>
+                          <span style={{fontWeight:600}}>{emp.prenom} {emp.nom}</span>
+                          {emp.statut !== 'salarie' && (
+                            <span style={{fontSize:10, color:'#94a3b8'}}>{emp.statut}</span>
+                          )}
+                        </div>
+                      </td>
+                      <td style={{padding:'6px 10px', textAlign:'center', fontWeight:700}}>{h.assigned.toFixed(1)}h</td>
+                      <td style={{padding:'6px 10px', textAlign:'center', color:'#64748b'}}>{h.contract > 0 ? `${h.contract}h` : '—'}</td>
+                      <td style={{padding:'6px 10px', textAlign:'center', fontWeight:700, color: h.contract > 0 ? diffColor : '#94a3b8'}}>
+                        {h.contract > 0 ? `${h.diff >= 0 ? '+' : ''}${h.diff.toFixed(1)}h` : '—'}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -78,26 +218,17 @@ function PlanningTab({ etablissement, employees, weekDates, weekType }) {
 // ══════════════════════════════════════════════════════════════
 export default function App() {
   const today = toLocalISO(new Date());
-  const [tab, setTab] = useState('settings');
-  const [weekType, setWeekType] = useState('A');
+  const [tab, setTab]             = useState('settings');
+  const [weekType, setWeekType]   = useState('A');
   const [weekStart, setWeekStart] = useState(today);
 
   // ── Supabase state ──
-  const [dbEmployees, setDbEmployees] = useState([]);
   const [dbEtablissements, setDbEtablissements] = useState([]);
-  const [dbLoading, setDbLoading] = useState(true);
+  const [dbLoading, setDbLoading]               = useState(true);
 
   const loadFromSupabase = useCallback(async () => {
-    const [empRes, etabRes] = await Promise.all([
-      supabase.from('employees').select('*').order('sort_order'),
-      supabase.from('etablissements').select('*').eq('is_active', true).order('sort_order'),
-    ]);
-    if (empRes.data) setDbEmployees(empRes.data);
-    if (etabRes.data) {
-      setDbEtablissements(etabRes.data);
-      // Si on est sur settings et qu'il y a des établissements, on reste sur settings
-      // Sinon, le premier chargement garde settings pour la config initiale
-    }
+    const { data } = await supabase.from('etablissements').select('*');
+    if (data) setDbEtablissements(data);
     setDbLoading(false);
   }, []);
 
@@ -105,12 +236,18 @@ export default function App() {
 
   // ── Date & week logic ──
   const monday = useMemo(() => getMonday(weekStart), [weekStart]);
+
+  // weekDates = ISO "YYYY-MM-DD" — format requis par le moteur
   const weekDates = useMemo(() => DAYS.map((_, i) => {
     const d = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + i, 12);
-    return fmtD(d);
+    return toLocalISO(d);
   }), [monday]);
 
-  const weekLabel = `${weekDates[0]} → ${weekDates[6]}`;
+  // weekLabel = affichage "DD/MM → DD/MM"
+  const weekLabel = useMemo(() => {
+    const end = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + 6, 12);
+    return `${fmtD(monday)} → ${fmtD(end)}`;
+  }, [monday]);
 
   // ── Build dynamic tabs ──
   const etabTabs = dbEtablissements.map(et => ({
@@ -121,7 +258,6 @@ export default function App() {
     etab: et,
   }));
 
-  // Ensure current tab is valid
   const allTabIds = [...etabTabs.map(t => t.id), 'settings'];
   const currentTab = allTabIds.includes(tab) ? tab : (etabTabs.length > 0 ? etabTabs[0].id : 'settings');
   if (currentTab !== tab) setTab(currentTab);
@@ -145,6 +281,11 @@ export default function App() {
             </div>
             {tab !== 'settings' && (
               <div style={{display:'flex',alignItems:'center',gap:12}}>
+                <button
+                  onClick={() => setWeekType(t => t === 'A' ? 'B' : 'A')}
+                  style={{background:'rgba(255,255,255,.12)',color:'#fff',border:'1px solid rgba(255,255,255,.2)',borderRadius:6,padding:'5px 9px',fontSize:11,cursor:'pointer',fontFamily:'inherit',fontWeight:700}}>
+                  Sem {weekType}
+                </button>
                 <input type="date" value={weekStart}
                   onChange={e=>setWeekStart(e.target.value)}
                   style={{background:'rgba(255,255,255,.12)',color:'#fff',border:'1px solid rgba(255,255,255,.2)',borderRadius:6,padding:'5px 9px',fontSize:11,cursor:'pointer',fontFamily:'inherit'}}/>
@@ -179,12 +320,10 @@ export default function App() {
           </div>
         ) : (
           <>
-            {activeEtab && (
+            {activeEtab && tab !== 'settings' && (
               <PlanningTab
                 etablissement={activeEtab}
-                employees={dbEmployees}
                 weekDates={weekDates}
-                weekType={weekType}
               />
             )}
             {tab === 'settings' && (
